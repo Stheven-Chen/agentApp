@@ -5,7 +5,7 @@ module.exports = {
   ],
   theme: {
     extend: {
-      height:{ "78px":"78px" }, 
+      height:{ "78px":"78px", "main":"150vh" }, 
       fontFamily: { 'Poppins': 'Poppins, sans-serif' }, 
       colors:{ "primary":"#0177b9", "login": "#cdcdcd" },
       borderRadius:{
