@@ -48,7 +48,7 @@ function FabComponent() {
       )}
 
       {/* Bulatan Endorsement */}
-      {showBulatans && (
+      {/* {showBulatans && (
         <button 
         onClick={()=>{
           setShowAlert(true)
@@ -57,7 +57,7 @@ function FabComponent() {
         className="bg-green-500 text-white rounded-full w-16 h-16 flex items-center justify-center absolute right-2 bottom-44">
           <span className="text-xs font-bold">Endorsement</span>
         </button>
-      )}
+      )} */}
 
       {/* Bulatan New */}
       {showBulatans && (
@@ -66,7 +66,7 @@ function FabComponent() {
           setShowAlert(true)
           setWhere('new')
         }}
-         className="bg-yellow-500 text-white rounded-full w-16 h-16 flex items-center justify-center absolute right-2 bottom-64">
+         className="bg-yellow-500 text-white rounded-full w-16 h-16 flex items-center justify-center absolute right-2 bottom-44 64">
           <span className="text-xs font-bold">New</span>
         </button>
       )}

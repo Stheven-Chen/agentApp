@@ -33,6 +33,8 @@ interface State {
   kelas: any;
   alamatObj: any;
   newApp: any;
+  komisi:any;
+  diskon:any;
 }
 
 const initialState: State = {
@@ -66,6 +68,8 @@ const initialState: State = {
   kelas: "",
   alamatObj: "",
   newApp: "",
+  komisi:'',
+  diskon:''
 };
 
 export const newSlice = createSlice({
@@ -98,6 +102,8 @@ export const newSlice = createSlice({
       state.periode = action.payload.periode;
       state.kelas = action.payload.kelas;
       state.alamatObj = action.payload.alamatObj;
+      state.komisi = action.payload.komisi;
+      state.diskon = action.payload.diskon;
     },
   },
 });

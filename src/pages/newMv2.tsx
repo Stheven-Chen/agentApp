@@ -12,7 +12,7 @@ import formatCurrency from '../component/function/formatcurrency';
 import useToday from '../component/function/today';
 
 const NewAppMv2: React.FC = () => {
-  const [data, setData] = useState({
+  const [data, setData] = useState<any>({
     polis: '',
     periode: '',
     okupasi: '',
@@ -24,8 +24,9 @@ const NewAppMv2: React.FC = () => {
     year:'',
     mesin:'',
     rangka:'',
-    plat:''
-
+    plat:'',
+    komisi:'',
+    diskon:''
   });
   const [merekMobil, setMerekMobil] = useState([]);
   const [modelMobil, setModelMobil] = useState(["1",'2','3']);
@@ -36,7 +37,7 @@ const NewAppMv2: React.FC = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setData((prevState) => ({ ...prevState,addedDate: today, type: "New", [name]: value }));
+    setData((prevState: any) => ({ ...prevState,addedDate: today, type: "New", [name]: value }));
   };
 
 
@@ -89,7 +90,9 @@ const NewAppMv2: React.FC = () => {
       year:data.year,
       mesin:data.mesin,
       plat:data.plat,
-      rangka:data.rangka
+      rangka:data.rangka,
+      diskon:data.diskon,
+      komisi:25-data.diskon
 
     }))
 
@@ -256,6 +259,21 @@ const NewAppMv2: React.FC = () => {
                   onChange={handleInputChange}
                   className="rounded-xl pl-3 w-full h-10 mt-5 p-3 font-Poppins font-semibold"
                   type="text"
+                />
+              </div>
+              <div className={`relative my-5`}>
+                <label htmlFor="diskon" className={`absolute left-3 -top-2.5 transition-all duration-200`}>
+                  Diskon:
+                </label>
+                <input
+                  id="diskon"
+                  name="diskon"
+                  placeholder="Max 25"
+                  value={data.diskon}
+                  onChange={handleInputChange}
+                  className="rounded-xl pl-3 w-full h-10 mt-5 p-3 font-Poppins font-semibold"
+                  max={25}
+                  type="number"
                 />
               </div>
               <div className='w-full flex justify-between px-2'>
