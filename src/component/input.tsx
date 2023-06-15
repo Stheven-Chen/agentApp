@@ -1,24 +1,33 @@
-import React from 'react'
+import React from 'react';
 
 type Props = {
   placeholder: string;
-  isPassword: boolean;
+  isPassword?: boolean;
   value?: string;
-  onChange:React.ChangeEventHandler<HTMLInputElement>;
-}
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  additionalStyles?: string; // Properti tambahan untuk mengontrol gaya
+  id?:string;
+  name?:string;
+  pattern?:string
+};
 
 const Input = (props: Props) => {
   const inputType = props.isPassword ? 'password' : 'text';
+
+  const inputStyles = `w-full  h-10 mt-5  p-3  font-Poppins font-semibold ${props.additionalStyles}`;
 
   return (
     <input
       onChange={props.onChange}
       type={inputType}
-      className='w-full rounded-full h-10 mt-5 bg-gray-600 p-3 text-white font-Poppins text-center font-semibold'
+      className={inputStyles}
       placeholder={props.placeholder}
       value={props.value}
+      id={props.id}
+      name={props.name}
+      pattern={props.pattern}
     />
-  )
-}
+  );
+};
 
-export default Input
+export default Input;

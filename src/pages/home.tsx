@@ -91,20 +91,20 @@ const Home: React.FC = () => {
                           {
                             label: 'Premi',
                             data: Object.values(showPremi),
-                            backgroundColor: [
-                              '#FF5733', // Merah
-                              '#FFC300', // Kuning
-                              '#4CAF50', // Hijau
-                              '#2196F3', // Biru
-                              '#9C27B0', // Ungu
-                              '#FF9800', // Jingga
+                            backgroundColor: 
+                              // '#FF5733', // Merah
+                              // '#FFC300', // Kuning
+                              // '#4CAF50', // Hijau
+                              // '#2196F3', // Biru
+                              // '#9C27B0', // Ungu
+                              // '#FF9800', // Jingga
                               '#E91E63', // Merah Muda
-                              '#00BCD4', // Cyan
-                              '#FFEB3B', // Kuning Cerah
-                              '#8BC34A', // Hijau Limau
-                              '#3F51B5', // Biru Tua
-                              '#673AB7', // Ungu Tua
-                            ],
+                              // '#00BCD4', // Cyan
+                              // '#FFEB3B', // Kuning Cerah
+                              // '#8BC34A', // Hijau Limau
+                              // '#3F51B5', // Biru Tua
+                              // '#673AB7', // Ungu Tua
+                            
                           },
                         ],
                       }}
@@ -148,20 +148,20 @@ const Home: React.FC = () => {
                           {
                             label: 'Pengajuan Baru',
                             data: Object.values(showBaru),
-                            backgroundColor: [
-                              '#FF5733', // Merah
-                              '#FFC300', // Kuning
-                              '#4CAF50', // Hijau
-                              '#2196F3', // Biru
-                              '#9C27B0', // Ungu
-                              '#FF9800', // Jingga
-                              '#E91E63', // Merah Muda
-                              '#00BCD4', // Cyan
-                              '#FFEB3B', // Kuning Cerah
+                            backgroundColor: 
+                              // '#FF5733', // Merah
+                              // '#FFC300', // Kuning
+                              // '#4CAF50', // Hijau
+                              // '#2196F3', // Biru
+                              // '#9C27B0', // Ungu
+                              // '#FF9800', // Jingga
+                              // '#E91E63', // Merah Muda
+                              //'#00BCD4', // Cyan
+                              // '#FFEB3B', // Kuning Cerah
                               '#8BC34A', // Hijau Limau
-                              '#3F51B5', // Biru Tua
-                              '#673AB7', // Ungu Tua
-                            ],
+                              // '#3F51B5', // Biru Tua
+                              // '#673AB7', // Ungu Tua
+                            
                           },
                         ],
                       }}

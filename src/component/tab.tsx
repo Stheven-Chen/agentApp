@@ -7,28 +7,28 @@ const Tab = (props: Props) => {
     const navigate =useNavigate();
 
     const home = () =>{
-        navigate('/home')
+        navigate('/agent/home')
     }
     const application = () =>{
-        navigate('/application')
+        navigate('/agent/application')
         
     }
     const commision = () =>{
-        navigate('/commision')
+        navigate('/agent/commision')
 
     }
   return (
     <div className="flex items-center justify-between  fixed bottom-0 left-0 w-full z-50 bg-primary h-14 p-5 font-Poppins rounded-t-30px">
-      <div className="flex items-center justify-center flex-col w-20">
-        <img onClick={home} className='w-5 h-5' src="./assets/home.svg" alt="home" />
+      <div onClick={home} className="flex items-center justify-center flex-col w-20">
+        <img className='w-5 h-5' src="/agent/assets/home.svg" alt="home" />
         <span className="text-white">Home</span>
       </div>
-      <div className="flex items-center justify-center flex-col w-20">
-        <img onClick={application} className='w-5 h-5' src="./assets/application.svg" alt="application" />
+      <div onClick={application} className="flex items-center justify-center flex-col w-20">
+        <img  className='w-5 h-5' src="/agent/assets/application.svg" alt="application" />
         <span className="text-white">Application</span>
       </div>
-      <div className="flex items-center justify-center flex-col w-20">
-        <img onClick={commision} className='w-5 h-5' src="./assets/commision.svg" alt="commision" />
+      <div onClick={commision} className="flex items-center justify-center flex-col w-20">
+        <img  className='w-5 h-5' src="/agent/assets/commision.svg" alt="commision" />
         <span className="text-white">Commision</span>
       </div>
     </div>
