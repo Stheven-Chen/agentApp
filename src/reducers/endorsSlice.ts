@@ -19,8 +19,8 @@ interface State {
 
 const initialState:State = {
     endors:'',
-    nPolis:'test',
-    insuredName:'test',
+    nPolis:'',
+    insuredName:'',
     periode:'',
     eDate:'',
     polis:'',

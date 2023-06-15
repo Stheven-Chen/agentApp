@@ -15,6 +15,7 @@ const KlaimH = lazy(()=>import('./pages/klaimH'));
 const KlaimMv = lazy(()=>import('./pages/klaimMv'));
 const EndorsMv = lazy(()=>import('./pages/endorsMv'));
 const EndorsH = lazy(()=>import('./pages/endorsH'));
+const Withdraw = lazy(()=>import('./pages/withdraw'))
 
 const App: React.FC = () => {
   return (
@@ -32,6 +33,7 @@ const App: React.FC = () => {
         <Route path="agent/application/endorsharta" element={<Suspense fallback={<Overlay text="Loading..."/>}><EndorsH /></Suspense>} />
         <Route path="agent/application/endorsmv" element={<Suspense fallback={<Overlay text="Loading..."/>}><EndorsMv /></Suspense>} />
         <Route path="agent/commision" element={<Suspense fallback={<Overlay text="Loading..."/>}><Commision /></Suspense>} />
+        <Route path="agent/commision/withdraw" element={<Suspense fallback={<Overlay text="Loading..."/>}><Withdraw /></Suspense>} />
       </Routes>
     </Router>
   );

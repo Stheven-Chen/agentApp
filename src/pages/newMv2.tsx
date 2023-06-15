@@ -44,7 +44,7 @@ const NewAppMv2: React.FC = () => {
   useEffect(() => {
     const fetchMerekMobil = async () => {
       try {
-        const res = await fetch('http://localhost:3001/');
+        const res = await fetch('http://192.168.137.1:3001/');
         const merek = await res.json();
         setMerekMobil(merek);
         console.log(merek)
@@ -259,7 +259,7 @@ const NewAppMv2: React.FC = () => {
                 />
               </div>
               <div className='w-full flex justify-between px-2'>
-                <button onClick={()=>{navigate('/application')}} className="bg-yellow-500 h-8 w-32 text-white font-Poppins rounded-xl transform-gpu transition-transform duration-300 active:scale-90">Cancel</button>
+                <button onClick={()=>{navigate('/agent/application')}} className="bg-yellow-500 h-8 w-32 text-white font-Poppins rounded-xl transform-gpu transition-transform duration-300 active:scale-90">Cancel</button>
                 <button type="submit" className="bg-sky-500 h-8 w-32 text-white font-Poppins rounded-xl transform-gpu transition-transform duration-300 active:scale-90">Send</button>
               </div>
             </form>
