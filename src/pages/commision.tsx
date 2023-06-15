@@ -28,7 +28,8 @@ const Commision:React.FC = () => {
 
     const fetchCom = async () =>{
       
-      const res = await fetch(`http://192.168.137.1:3001/${username}/commision`);
+      // const res = await fetch(`http://192.168.137.1:3001/${username}/commision`);
+      const res = await fetch(`https://agentserver-production.up.railway.app/${username}/commision`);
       const com = await res.json();
       setData({
         minggu: com[0].commission.mingguan,

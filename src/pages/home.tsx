@@ -23,7 +23,8 @@ const Home: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      const res = await fetch(`http://192.168.137.1:3001/${username}`);
+      // const res = await fetch(`http://192.168.137.1:3001/${username}`);
+      const res = await fetch(`https://agentserver-production.up.railway.app/${username}`);
       if (!res.ok) {
         throw new Error('Failed to fetch data');
       }

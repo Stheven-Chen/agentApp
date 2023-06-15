@@ -45,7 +45,8 @@ const NewAppMv2: React.FC = () => {
   useEffect(() => {
     const fetchMerekMobil = async () => {
       try {
-        const res = await fetch('http://192.168.137.1:3001/');
+        // const res = await fetch('http://192.168.137.1:3001/');
+        const res = await fetch('https://agentserver-production.up.railway.app/');
         const merek = await res.json();
         setMerekMobil(merek);
         console.log(merek)
@@ -189,7 +190,7 @@ const NewAppMv2: React.FC = () => {
                   id="rangka"
                   name="rangka"
                   placeholder=""
-                  value={data.rangka}
+                  value={data.rangka.toUpperCase()}
                   onChange={handleInputChange}
                   additionalStyles="rounded-xl pl-3"
 
@@ -206,7 +207,7 @@ const NewAppMv2: React.FC = () => {
                   id="mesin"
                   name="mesin"
                   placeholder=""
-                  value={data.mesin}
+                  value={data.mesin.toUpperCase()}
                   onChange={handleInputChange}
                   additionalStyles="rounded-xl pl-3"
 

@@ -19,7 +19,8 @@ const Login: React.FC = () => {
       return
     }
     try{
-        const res = await fetch('http://192.168.137.1:3001/users');
+        // const res = await fetch('http://192.168.137.1:3001/users');
+        const res = await fetch('https://agentserver-production.up.railway.app/users');
         const data = await res.json();
         const trimUsername = username.trim();
         const filterUser = data.find((item:{user:string})=>item.user===trimUsername);
