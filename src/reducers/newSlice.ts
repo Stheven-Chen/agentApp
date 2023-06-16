@@ -1,14 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-interface PerluasanState {
-  rscc: any;
-  eqvet: any;
-  ts: any;
-  tshfl: any;
-  rsmdcc: any;
-  tsfwd: any;
-  others: any;
-}
+// interface any {
+//   rscc: any;
+//   eqvet: any;
+//   ts: any;
+//   tshfl: any;
+//   rsmdcc: any;
+//   tsfwd: any;
+//   others: any;
+// }
 
 interface State {
   addedDate: any;
@@ -27,7 +27,7 @@ interface State {
   mesin: any;
   plat: any;
   okupasi: any;
-  perluasan: PerluasanState;
+  perluasan: any;
   tsi: any;
   periode: any;
   kelas: any;
@@ -55,13 +55,7 @@ const initialState: State = {
   plat: "",
   okupasi: "",
   perluasan: {
-    rscc: false,
-    eqvet: false,
-    ts: false,
-    tshfl: false,
-    rsmdcc: false,
-    tsfwd: false,
-    others: false,
+    
   },
   tsi: "",
   periode: "",
@@ -97,7 +91,7 @@ export const newSlice = createSlice({
       state.mesin = action.payload.mesin;
       state.plat = action.payload.plat;
       state.okupasi = action.payload.okupasi;
-      // state.perluasan = action.payload.perluasan;
+      state.perluasan = action.payload.perluasan;
       state.tsi = action.payload.tsi;
       state.periode = action.payload.periode;
       state.kelas = action.payload.kelas;

@@ -26,18 +26,37 @@ const NewAppMv2: React.FC = () => {
     rangka:'',
     plat:'',
     komisi:'',
-    diskon:''
-  });
+    diskon:'',
+    startD:'',
+    endD:'',
+    perluasan:[]
+      });
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [merekMobil, setMerekMobil] = useState([]);
-  const [modelMobil, setModelMobil] = useState(["1",'2','3']);
+  const [modelMobil, setModelMobil] = useState([]);
   const newApp = useSelector((state: NewState) => state.newApp);
   const dispatch = useDispatch();
   const navigate= useNavigate();
   const today = useToday();
+    const [periode,setPeriode]=useState('');
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setData((prevState: any) => ({ ...prevState,addedDate: today, type: "New", [name]: value }));
+    setPeriode(`${data.startD} - ${data.endD}`)
+  };
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    const isChecked = event.target.checked;
+
+    if (isChecked) {
+      // Tambahkan ke array jika checkbox di-checked
+      setSelectedOptions([...selectedOptions, value]);
+    } else {
+      // Hapus dari array jika checkbox di-unchecked
+      setSelectedOptions(selectedOptions.filter((option) => option !== value));
+    }
   };
 
 
@@ -82,7 +101,7 @@ const NewAppMv2: React.FC = () => {
       ...newApp, 
       tsi:data.tsi, 
       polis:data.polis, 
-      periode:data.periode, 
+      periode:periode, 
       okupasi:data.okupasi, 
       addedDate:data.addedDate,
       type:data.type,
@@ -93,7 +112,8 @@ const NewAppMv2: React.FC = () => {
       plat:data.plat,
       rangka:data.rangka,
       diskon:data.diskon,
-      komisi:25-data.diskon
+      komisi:25-data.diskon,
+      perluasan:selectedOptions
 
     }))
 
@@ -160,6 +180,35 @@ const NewAppMv2: React.FC = () => {
                   })}
                 </select>
 
+              </div>
+              <div className={`relative my-5`}>
+                <label htmlFor="startD" className={`absolute left-3 -top-2.5 transition-all duration-200`}>
+                  Periode Pertanggungan:
+                </label>
+                <div className="flex justify-between items-center gap-4">
+                <input
+                  id="startD"
+                  name="startD"
+                  placeholder=""
+                  value={data.startD}
+                  onChange={handleInputChange}
+                  className="rounded-xl pl-3 w-full h-10 mt-5 p-3 font-Poppins font-semibold"
+                  type="date"
+                  min={today}
+                />
+                <span className="mt-5">s/d</span>
+                <input
+                  id="endD"
+                  name="endD"
+                  placeholder=""
+                  value={data.endD}
+                  onChange={handleInputChange}
+                  className="rounded-xl pl-3 w-full h-10 mt-5 p-3 font-Poppins font-semibold"
+                  type="date"
+                  min={today}
+                />
+
+                </div>
               </div>
               <div className={` relative my-5 `}>
                 <label
@@ -261,6 +310,53 @@ const NewAppMv2: React.FC = () => {
                   className="rounded-xl pl-3 w-full h-10 mt-5 p-3 font-Poppins font-semibold"
                   type="text"
                 />
+              </div>
+              <div className={`relative my-5`}>
+                <label className="block mb-2">Perluasan</label>
+                <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="perluasan"
+                  value="tshfl"
+                  checked={selectedOptions.includes('tshfl')}
+                  onChange={handleCheckboxChange}
+                  className="mr-2"
+                />
+                  <span>TSHFL</span>
+                </div>
+                <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="perluasan"
+                  value='rscc'
+                  checked={selectedOptions.includes('rscc')}
+                  onChange={handleCheckboxChange}
+                  className="mr-2"
+                />
+                  <span>RSCC</span>
+                </div>
+                <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="perluasan"
+                  value='eqvet'
+                  checked={selectedOptions.includes('eqvet')}
+                  onChange={handleCheckboxChange}
+                  className="mr-2"
+                />
+                  <span>EQVET</span>
+                </div>
+                <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="perluasan"
+                  value='ts'
+                  checked={selectedOptions.includes('ts')}
+                  onChange={handleCheckboxChange}
+                  className="mr-2"
+                />
+                  <span>TS</span>
+                </div>
               </div>
               <div className={`relative my-5`}>
                 <label htmlFor="diskon" className={`absolute left-3 -top-2.5 transition-all duration-200`}>

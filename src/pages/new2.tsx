@@ -23,7 +23,11 @@ const NewApp2: React.FC = () => {
     type:'',
     diskon:'',
     komisi:'',
+    startD:'',
+    endD:'',
   });
+  const [periode,setPeriode]=useState('');
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const newApp = useSelector((state: NewState) => state.newApp);
   const dispatch = useDispatch();
   const navigate= useNavigate();
@@ -32,6 +36,20 @@ const NewApp2: React.FC = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setData((prevState:any) => ({ ...prevState,addedDate: today, type: "New", [name]: value }));
+    setPeriode(`${data.startD} - ${data.endD}`)
+  };
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    const isChecked = event.target.checked;
+
+    if (isChecked) {
+      // Tambahkan ke array jika checkbox di-checked
+      setSelectedOptions([...selectedOptions, value]);
+    } else {
+      // Hapus dari array jika checkbox di-unchecked
+      setSelectedOptions(selectedOptions.filter((option) => option !== value));
+    }
   };
 
   const submit = (e:React.FormEvent<HTMLFormElement>) =>{
@@ -41,13 +59,15 @@ const NewApp2: React.FC = () => {
       tsi:data.tsi, 
       polis:data.polis, 
       alamatObj:data.alamatObj, 
-      periode:data.periode, 
+      periode:periode, 
       okupasi:data.okupasi, 
       kelas:data.kelas,
       addedDate:data.addedDate,
       type:data.type,
       diskon:data.diskon,
-      komisi:15-data.diskon
+      komisi:15-data.diskon,
+      perluasan:selectedOptions
+
 
     }))
 
@@ -103,15 +123,15 @@ const NewApp2: React.FC = () => {
                 />
               </div>
               <div className={`relative my-5`}>
-                <label htmlFor="periode" className={`absolute left-3 -top-2.5 transition-all duration-200`}>
+                <label htmlFor="startD" className={`absolute left-3 -top-2.5 transition-all duration-200`}>
                   Periode Pertanggungan:
                 </label>
                 <div className="flex justify-between items-center gap-4">
                 <input
-                  id="periode"
-                  name="periode"
+                  id="startD"
+                  name="startD"
                   placeholder=""
-                  value={data.periode}
+                  value={data.startD}
                   onChange={handleInputChange}
                   className="rounded-xl pl-3 w-full h-10 mt-5 p-3 font-Poppins font-semibold"
                   type="date"
@@ -119,10 +139,10 @@ const NewApp2: React.FC = () => {
                 />
                 <span className="mt-5">s/d</span>
                 <input
-                  id="periode"
-                  name="periode"
+                  id="endD"
+                  name="endD"
                   placeholder=""
-                  value={data.periode}
+                  value={data.endD}
                   onChange={handleInputChange}
                   className="rounded-xl pl-3 w-full h-10 mt-5 p-3 font-Poppins font-semibold"
                   type="date"
@@ -146,6 +166,53 @@ const NewApp2: React.FC = () => {
                   <option value="Rumah Tinggal">Rumah Tinggal</option>
                   <option value="Ruko">Ruko</option>
                 </select>
+              </div>
+              <div className={`relative my-5`}>
+                <label className="block mb-2">Perluasan</label>
+                <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="perluasan"
+                  value="tsfwd"
+                  checked={selectedOptions.includes('tsfwd')}
+                  onChange={handleCheckboxChange}
+                  className="mr-2"
+                />
+                  <span>TSFWD</span>
+                </div>
+                <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="perluasan"
+                  value='rsmdcc'
+                  checked={selectedOptions.includes('rsmdcc')}
+                  onChange={handleCheckboxChange}
+                  className="mr-2"
+                />
+                  <span>RSMDCC</span>
+                </div>
+                <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="perluasan"
+                  value='eqvet'
+                  checked={selectedOptions.includes('eqvet')}
+                  onChange={handleCheckboxChange}
+                  className="mr-2"
+                />
+                  <span>EQVET</span>
+                </div>
+                <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="perluasan"
+                  value='others'
+                  checked={selectedOptions.includes('others')}
+                  onChange={handleCheckboxChange}
+                  className="mr-2"
+                />
+                  <span>Others</span>
+                </div>
               </div>
               <div className={`relative my-5`}>
                 <label className="block mb-2">Kelas Konstruksi:</label>
