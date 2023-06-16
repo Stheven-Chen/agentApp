@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import Nav from '../component/nav';
 import Tab from '../component/tab';
 import MainBox from '../component/mainBox';
@@ -10,6 +10,9 @@ import { NewState } from '../reducers/newSlice';
 import {useNavigate} from 'react-router-dom';
 import formatCurrency from '../component/function/formatcurrency';
 import useToday from '../component/function/today';
+// import Signature from '../component/sign'
+import  SignaturePad  from "signature_pad";
+
 
 const NewAppMv2: React.FC = () => {
   const [data, setData] = useState<any>({
@@ -39,6 +42,9 @@ const NewAppMv2: React.FC = () => {
   const navigate= useNavigate();
   const today = useToday();
     const [periode,setPeriode]=useState('');
+    const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const signaturePad = useRef<SignaturePad | null>(null);
+  const [sign, setSign] = useState<string>("");
 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -58,6 +64,26 @@ const NewAppMv2: React.FC = () => {
       setSelectedOptions(selectedOptions.filter((option) => option !== value));
     }
   };
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const signaturePadOptions = {
+        backgroundColor: "rgb(255, 255, 255)",
+        penColor: "rgb(0, 0, 0)",
+      };
+      signaturePad.current = new SignaturePad(canvas, signaturePadOptions);
+      signaturePad.current.clear(); // clear signature
+    }
+  }, []);
+
+  // const handleClear = () => {
+  //   signaturePad.current?.clear();
+  //   setSign(""); // reset sign state
+  //   console.log('clicked')
+  // };
+
+  
 
 
   
@@ -92,7 +118,14 @@ const NewAppMv2: React.FC = () => {
   
   
 
-    
+    const save = () =>{
+      const dataURL = signaturePad.current?.toDataURL();
+    if (dataURL) {
+      setSign(dataURL); // save signature to state
+    }
+    console.log(sign)
+
+    }
   
 
   const submit = (e:React.FormEvent<HTMLFormElement>) =>{
@@ -113,7 +146,8 @@ const NewAppMv2: React.FC = () => {
       rangka:data.rangka,
       diskon:data.diskon,
       komisi:25-data.diskon,
-      perluasan:selectedOptions
+      perluasan:selectedOptions,
+      sign:sign
 
     }))
 
@@ -373,9 +407,16 @@ const NewAppMv2: React.FC = () => {
                   type="number"
                 />
               </div>
+              <div className='relative my-5 rounded-xl border-solid border-2 border-gray-300 flex justify-center p-3 flex-col gap-3 shadow-lg'>
+              <canvas className='rounded-xl' ref={canvasRef}></canvas>
+              <div className='flex justify-center items-center w-full'>
+              {/* <button className='bg-red-500 h-8 w-32 text-white font-Poppins rounded-xl transform-gpu transition-transform duration-300 active:scale-90' onClick={handleClear}>Reset</button> */}
+              </div>
+                
+              </div>
               <div className='w-full flex justify-between px-2'>
                 <button onClick={()=>{navigate('/agent/application')}} className="bg-yellow-500 h-8 w-32 text-white font-Poppins rounded-xl transform-gpu transition-transform duration-300 active:scale-90">Cancel</button>
-                <button type="submit" className="bg-sky-500 h-8 w-32 text-white font-Poppins rounded-xl transform-gpu transition-transform duration-300 active:scale-90">Send</button>
+                <button onClick={save} type="submit" className="bg-sky-500 h-8 w-32 text-white font-Poppins rounded-xl transform-gpu transition-transform duration-300 active:scale-90">Send</button>
               </div>
             </form>
           </>

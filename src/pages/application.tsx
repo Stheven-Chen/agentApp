@@ -69,7 +69,8 @@ const Application: React.FC = () => {
                     <span className='w-full mt-5 text-start text-base'>{`NIK: ${newApp.NIK}`}</span>
                     <span className='w-full text-start text-base'>{`Phone: ${newApp.phone}`}</span>
                     <span className='w-full text-start text-base'>{`Email: ${newApp.email}`}</span>
-                    <span className='w-full text-start text-base'>{`Alamat Objek Pertanggungan: ${newApp.alamatObj}`}</span>
+                    <span className='w-full text-start text-base'>{`Alamat Objek Pertanggungan:`}</span>
+                    <span className='w-full text-start text-base'>{`${newApp.alamatObj}`}</span>
                     <span className='w-full text-start text-base'>{`COB: ${newApp.COB}`}</span>
                     <span>&nbsp;</span>
                     <span className='w-full text-start text-base'>{`Okupasi: ${newApp.okupasi}`}</span>
@@ -79,6 +80,7 @@ const Application: React.FC = () => {
                     <span className='w-full text-start text-base'>{`Kelas: ${newApp.kelas}`}</span>
                     <span className='w-full text-start text-base'>{`Perluasan: ${newApp.perluasan}`}</span>
                     <span className='w-full text-start text-base'>{`Diskon: ${newApp.diskon}%`}</span>
+                    <img src={newApp.sign} alt="sign" className='' />
                   <button className='text-sky-600 text-lg font-medium transition-transform transform-gpu duration-300 active:scale-90' onClick={()=>setShowModal(false)}>Close</button>
                   </div>
                 </div>

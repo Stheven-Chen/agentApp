@@ -35,6 +35,7 @@ interface State {
   newApp: any;
   komisi:any;
   diskon:any;
+  sign:any
 }
 
 const initialState: State = {
@@ -63,7 +64,8 @@ const initialState: State = {
   alamatObj: "",
   newApp: "",
   komisi:'',
-  diskon:''
+  diskon:'',
+  sign:''
 };
 
 export const newSlice = createSlice({
@@ -98,6 +100,7 @@ export const newSlice = createSlice({
       state.alamatObj = action.payload.alamatObj;
       state.komisi = action.payload.komisi;
       state.diskon = action.payload.diskon;
+      state.sign = action.payload.sign;
     },
   },
 });
