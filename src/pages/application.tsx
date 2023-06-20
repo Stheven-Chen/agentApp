@@ -32,9 +32,9 @@ const Application: React.FC = () => {
   //   fetchData();
   // }, [username]);
 
-  console.log(JSON.stringify(newApp, null, 2 ))
-  console.log(JSON.stringify(klaim, null, 2 ))
-  console.log(JSON.stringify(endors, null, 2 ))
+  console.log(newApp)
+  console.log(klaim)
+  console.log(endors)
 
   const modal = () =>{
     setShowModal(true)
@@ -47,10 +47,10 @@ const Application: React.FC = () => {
         content={
           <>
             <span className="text-xl font-semibold">Application List</span>
-            {newApp.NIK |klaim.nPolis|endors.nPolis ? (
+            {newApp.NIK.length > 0 ||klaim.nPolis.length > 0 ? (
 
               <>
-              {newApp.NIK && (
+              {newApp.NIK.length > 0 && newApp.COB === 'Harta Benda' ? (
               <>
               <div className="w-full lg:w-9/12 flex flex-col justify-center bg-white shadow-md rounded-lg p-3 my-3 h-1/5">
                 <div className="grid grid-cols-2">
@@ -86,9 +86,49 @@ const Application: React.FC = () => {
                 </div>
               )}
               </>
+              ):(
+                <>
+              <div className="w-full lg:w-9/12 flex flex-col justify-center bg-white shadow-md rounded-lg p-3 my-3 h-1/5">
+                <div className="grid grid-cols-2">
+                  <span>{newApp.addedDate}</span>
+                  <span className="text-end">{newApp.COB}</span>
+                  <span>{newApp.insuredName}</span>
+                  <span className="text-end">{newApp.polis}</span>
+                  <span className="">{newApp.type}</span>
+                </div>
+                <img className='h-5 w-5 self-center' onClick={modal} src="/agent/assets/arrow.svg" alt="arrow" />
+              </div>
+              {showModal && (
+                   <div className="fixed top-0 left-0 font-Poppins w-screen h-screen z-50 bg-black bg-opacity-50 flex items-center justify-center">
+                   <div className='w-11/12 lg:w-9/12 bg-white rounded-xl p-4 flex flex-col'>
+                     <span className='w-full text-center text-xl font-semibold'>{newApp.insuredName}</span>
+                     <span className='w-full mt-5 text-start text-base'>{`NIK: ${newApp.NIK}`}</span>
+                     <span className='w-full text-start text-base'>{`Phone: ${newApp.phone}`}</span>
+                     <span className='w-full text-start text-base'>{`Email: ${newApp.email}`}</span>
+                     <span className='w-full text-start text-base'>{`Alamat Objek Pertanggungan:`}</span>
+                     <span className='w-full text-start text-base'>{`${newApp.alamatObj}`}</span>
+                     <span className='w-full text-start text-base'>{`COB: ${newApp.COB}`}</span>
+                     <span>&nbsp;</span>
+                     <span className='w-full text-start text-base'>{`Okupasi: ${newApp.okupasi}`}</span>
+                     <span className='w-full text-start text-base'>{`TSI: ${newApp.tsi}`}</span>
+                     <span className='w-full text-start text-base'>{`Pertanggungan: ${newApp.polis}`}</span>
+                     <span className='w-full text-start text-base'>{`Periode: ${newApp.periode}`}</span>
+                     <span className='w-full text-start text-base'>{`Merek: ${newApp.merek}`}</span>
+                     <span className='w-full text-start text-base'>{`Model: ${newApp.model}`}</span>
+                     <span className='w-full text-start text-base'>{`No Polisi: ${newApp.Plat}`}</span>
+                     <span className='w-full text-start text-base'>{`No Mesin: ${newApp.mesin}`}</span>
+                     <span className='w-full text-start text-base'>{`No rangka: ${newApp.rangka}`}</span>
+                     <span className='w-full text-start text-base'>{`Perluasan: ${newApp.perluasan}`}</span>
+                     <span className='w-full text-start text-base'>{`Diskon: ${newApp.diskon}%`}</span>
+                     <img src={newApp.sign} alt="sign" className='' />
+                   <button className='text-sky-600 text-lg font-medium transition-transform transform-gpu duration-300 active:scale-90' onClick={()=>setShowModal(false)}>Close</button>
+                   </div>
+                 </div>
+              )}
+              </>
               )}
 
-              {klaim.nPolis&&(
+              {klaim.nPolis.length > 0&&(
                 <>
                 <div className="w-full flex flex-col lg:w-9/12 justify-center bg-white shadow-md rounded-lg p-3 my-3 h-1/5">
                   <div className="grid grid-cols-2">

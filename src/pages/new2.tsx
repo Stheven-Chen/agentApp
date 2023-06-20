@@ -4,10 +4,9 @@ import Tab from '../component/tab';
 import MainBox from '../component/mainBox';
 import FabComponent from '../component/fab';
 import Input from '../component/input';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setNew } from '../reducers/newSlice';
-import { NewState } from '../reducers/newSlice';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useLocation} from 'react-router-dom';
 import formatCurrency from '../component/function/formatcurrency';
 import useToday from '../component/function/today';
 import  SignaturePad  from "signature_pad";
@@ -30,19 +29,37 @@ const NewApp2: React.FC = () => {
   });
   const [periode,setPeriode]=useState('');
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-  const newApp = useSelector((state: NewState) => state.newApp);
   const dispatch = useDispatch();
   const navigate= useNavigate();
   const today = useToday();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const signaturePad = useRef<SignaturePad | null>(null);
   const [sign, setSign] = useState<string>("");
+  const {state} = useLocation()
+  const {insuredName, NIK, address, phone, email, COB} = state
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setData((prevState:any) => ({ ...prevState,addedDate: today, type: "New", [name]: value }));
-    setPeriode(`${data.startD} - ${data.endD}`)
+  
+    if (name === "startD") {
+      // Menghitung tanggal 1 tahun kemudian dari startD
+      const startDate = new Date(value);
+      const endDate = new Date(startDate.getFullYear() + 1, startDate.getMonth(), startDate.getDate()+1);
+  
+      setData((prevState:any) => ({
+        ...prevState,
+        addedDate: today,
+        type: "New",
+        [name]: value,
+        endD: endDate.toISOString().split("T")[0] // Mengubah format tanggal ke "yyyy-mm-dd"
+      }));
+      setPeriode(`${startDate.toISOString().split('T')[0].toString()} - ${endDate.toISOString().split('T')[0].toString()}`);
+    } else {
+      setData((prevState:any) => ({ ...prevState, addedDate: today, type: "New", [name]: value }));
+    }
+  
   };
+  
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -81,7 +98,6 @@ const NewApp2: React.FC = () => {
   const submit = (e:React.FormEvent<HTMLFormElement>) =>{
     e.preventDefault();
     dispatch(setNew({
-      ...newApp, 
       tsi:data.tsi, 
       polis:data.polis, 
       alamatObj:data.alamatObj, 
@@ -93,9 +109,13 @@ const NewApp2: React.FC = () => {
       diskon:data.diskon,
       komisi:15-data.diskon,
       perluasan:selectedOptions,
-      sign:sign
-
-
+      sign:sign,
+      NIK,
+      address,
+      phone,
+      email,
+      COB,
+      insuredName
     }))
 
     navigate('/agent/application/')

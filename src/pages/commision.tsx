@@ -46,7 +46,7 @@ const Commision:React.FC = () => {
   
 
   const onClick = () =>{
-    dispatch(setCom({jumlah:Object.values(minggu).flatMap(arr => arr).reduce((acc, cur) => acc + Number(cur), 0).toString()}))
+    dispatch(setCom({jumlah:Object.values(minggu).flatMap(arr => arr).reduce((acc, cur) => acc + Number(cur), 0)}))
     navigate('withdraw')
   }
   return (

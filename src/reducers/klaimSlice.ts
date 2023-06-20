@@ -2,31 +2,31 @@ import {createSlice} from '@reduxjs/toolkit';
 
 
 interface State{
-    nPolis:string;
-    insuredName:string;
-    periode:string;
-    polis:string;
-    okupasi:string;
-    dol:string;
-    COB:string,
-    type:string,
-    kronologi:string;
+    nPolis:any;
+    insuredName:any;
+    periode:any;
+    polis:any;
+    okupasi:any;
+    dol:any;
+    COB:any,
+    type:any,
+    kronologi:any;
     klaim:any
-    addedDate:string;
+    addedDate:any;
 }
 
 const initialState:State={
-    addedDate:'',
-    nPolis:'',
-    insuredName:'',
-    periode:'',
-    polis:'',
-    okupasi:'',
-    dol:'',
-    kronologi:'',
-    klaim:'',
-    COB:'',
-    type:'',
+    addedDate:[],
+    nPolis:[],
+    insuredName:[],
+    periode:[],
+    polis:[],
+    okupasi:[],
+    dol:[],
+    kronologi:[],
+    klaim:[],
+    COB:[],
+    type:[],
 }
 
 export const klaimSlice=createSlice({
@@ -34,17 +34,17 @@ export const klaimSlice=createSlice({
     initialState,
     reducers:{
         setKlaim:(state, action)=>{
-            state.addedDate=action.payload.addedDate;
-            state.nPolis=action.payload.nPolis;
-            state.insuredName=action.payload.insuredName;
-            state.periode=action.payload.periode;
-            state.polis=action.payload.polis;
-            state.okupasi=action.payload.okupasi;
-            state.dol=action.payload.dol;
-            state.kronologi=action.payload.kronologi;
-            state.klaim=action.payload.klaim;
-            state.COB=action.payload.COB;
-            state.type=action.payload.type;
+            state.addedDate.push(action.payload.addedDate);
+            state.nPolis.push(action.payload.nPolis);
+            state.insuredName.push(action.payload.insuredName);
+            state.periode.push(action.payload.periode);
+            state.polis.push(action.payload.polis);
+            state.okupasi.push(action.payload.okupasi);
+            state.dol.push(action.payload.dol);
+            state.kronologi.push(action.payload.kronologi);
+            state.klaim.push(action.payload.klaim);
+            state.COB.push(action.payload.COB);
+            state.type.push(action.payload.type);
         }
     }
 }) 

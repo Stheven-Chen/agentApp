@@ -5,6 +5,10 @@
 /.pnp
 .pnp.js
 
+#file
+appH.txt
+appmv.txt
+
 # testing
 /coverage
 

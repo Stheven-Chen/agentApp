@@ -4,13 +4,11 @@ import Tab from '../component/tab';
 import MainBox from '../component/mainBox';
 import FabComponent from '../component/fab';
 import Input from '../component/input';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setNew } from '../reducers/newSlice';
-import { NewState } from '../reducers/newSlice';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useLocation} from 'react-router-dom';
 import formatCurrency from '../component/function/formatcurrency';
 import useToday from '../component/function/today';
-// import Signature from '../component/sign'
 import  SignaturePad  from "signature_pad";
 
 
@@ -37,7 +35,6 @@ const NewAppMv2: React.FC = () => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [merekMobil, setMerekMobil] = useState([]);
   const [modelMobil, setModelMobil] = useState([]);
-  const newApp = useSelector((state: NewState) => state.newApp);
   const dispatch = useDispatch();
   const navigate= useNavigate();
   const today = useToday();
@@ -45,12 +42,31 @@ const NewAppMv2: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const signaturePad = useRef<SignaturePad | null>(null);
   const [sign, setSign] = useState<string>("");
+  const {state} = useLocation()
+  const {insuredName, NIK, address, phone, email, COB} = state
+
 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setData((prevState: any) => ({ ...prevState,addedDate: today, type: "New", [name]: value }));
-    setPeriode(`${data.startD} - ${data.endD}`)
+  
+    if (name === "startD") {
+      // Menghitung tanggal 1 tahun kemudian dari startD
+      const startDate = new Date(value);
+      const endDate = new Date(startDate.getFullYear() + 1, startDate.getMonth(), startDate.getDate()+1);
+  
+      setData((prevState:any) => ({
+        ...prevState,
+        addedDate: today,
+        type: "New",
+        [name]: value,
+        endD: endDate.toISOString().split("T")[0] // Mengubah format tanggal ke "yyyy-mm-dd"
+      }));
+      setPeriode(`${startDate.toISOString().split('T')[0].toString()} - ${endDate.toISOString().split('T')[0].toString()}`);
+    } else {
+      setData((prevState:any) => ({ ...prevState, addedDate: today, type: "New", [name]: value }));
+    }
+  
   };
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -131,7 +147,6 @@ const NewAppMv2: React.FC = () => {
   const submit = (e:React.FormEvent<HTMLFormElement>) =>{
     e.preventDefault();
     dispatch(setNew({
-      ...newApp, 
       tsi:data.tsi, 
       polis:data.polis, 
       periode:periode, 
@@ -147,8 +162,13 @@ const NewAppMv2: React.FC = () => {
       diskon:data.diskon,
       komisi:25-data.diskon,
       perluasan:selectedOptions,
-      sign:sign
-
+      sign:sign,
+      NIK,
+      address,
+      phone,
+      email,
+      COB,
+      insuredName
     }))
 
     navigate('/agent/application/')
@@ -196,8 +216,8 @@ const NewAppMv2: React.FC = () => {
                 <select name="merek" id="merek" value={data.merek}
                   onChange={handleInputChange} className="rounded-xl pl-3 w-full h-10 mt-5 font-Poppins font-semibold">
                   <option value="">Pilih merek</option>
-                  {merekMobil.map((item: { merek: string }) => {
-                    return <option value={item.merek}>{item.merek}</option>;
+                  {merekMobil.map((item: { merek: string }, index:number) => {
+                    return <option key={index} value={item.merek}>{item.merek}</option>;
                   })}
                 </select>
 
@@ -209,8 +229,8 @@ const NewAppMv2: React.FC = () => {
                 <select name="model" id="model" value={data.model}
                   onChange={handleInputChange} className="rounded-xl pl-3 w-full h-10 mt-5 font-Poppins font-semibold">
                   <option value="">Pilih model</option>
-                  {modelMobil.map((item:string) => {
-                    return <option value={item}>{item}</option>;
+                  {modelMobil.map((item:string, index:number) => {
+                    return <option key={index} value={item}>{item}</option>;
                   })}
                 </select>
 

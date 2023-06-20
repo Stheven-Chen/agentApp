@@ -4,9 +4,6 @@ import Tab from '../component/tab';
 import MainBox from '../component/mainBox';
 import FabComponent from '../component/fab';
 import Input from '../component/input';
-import { useDispatch, useSelector } from 'react-redux';
-import { setNew } from '../reducers/newSlice';
-import { NewState } from '../reducers/newSlice';
 import {useNavigate} from 'react-router-dom';
 
 const NewAppMv: React.FC = () => {
@@ -17,8 +14,6 @@ const NewAppMv: React.FC = () => {
     telp: '',
     email: '',
   });
-  const newApp = useSelector((state: NewState) => state.newApp)
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,8 +24,14 @@ const NewAppMv: React.FC = () => {
 
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(setNew({ ...newApp, address:data.alamat, phone:data.telp, email:data.email, insuredName: data.insuredName, NIK: data.nik, COB: "MV" }));
-    navigate(`:${data.nik}`)
+    navigate(`:${data.nik}`, {state:{
+      insuredName:data.insuredName,
+      NIK:data.nik,
+      address:data.alamat,
+      phone:data.telp,
+      email:data.email,
+      COB: "MV"
+    }})
 
   };
 
