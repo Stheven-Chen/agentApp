@@ -168,7 +168,8 @@ const NewAppMv2: React.FC = () => {
       phone,
       email,
       COB,
-      insuredName
+      insuredName,
+      status:'Approval'
     }))
 
     navigate('/agent/application/')

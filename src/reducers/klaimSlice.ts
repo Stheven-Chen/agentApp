@@ -13,6 +13,7 @@ interface State{
     kronologi:any;
     klaim:any
     addedDate:any;
+    status:any
 }
 
 const initialState:State={
@@ -27,6 +28,7 @@ const initialState:State={
     klaim:[],
     COB:[],
     type:[],
+    status:[]
 }
 
 export const klaimSlice=createSlice({
@@ -45,6 +47,7 @@ export const klaimSlice=createSlice({
             state.klaim.push(action.payload.klaim);
             state.COB.push(action.payload.COB);
             state.type.push(action.payload.type);
+            state.status.push(action.payload.status);
         }
     }
 }) 

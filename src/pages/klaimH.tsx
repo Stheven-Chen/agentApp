@@ -45,6 +45,7 @@ const KlaimH = () => {
         dol: data.dol,
         kronologi: data.kronologi,
         addedDate: today,
+        status:'First Report'
       })
     );
     navigate('/agent/application');

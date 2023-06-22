@@ -36,9 +36,10 @@ interface State {
   komisi:any
   diskon:any
   sign:any
+  status:any
 }
 
-const initialState: State = {
+const initialState: State ={
   addedDate: [],
   type: [],
   insuredName: [],
@@ -63,7 +64,8 @@ const initialState: State = {
   newApp: [],
   komisi:[],
   diskon:[],
-  sign:[]
+  sign:[],
+  status:[]
 };
 
 export const newSlice = createSlice({
@@ -99,6 +101,7 @@ export const newSlice = createSlice({
       state.komisi.push( action.payload.komisi);
       state.diskon.push( action.payload.diskon);
       state.sign.push( action.payload.sign);
+      state.status.push( action.payload.status);
     },
   },
 });

@@ -8,6 +8,7 @@
 #file
 appH.txt
 appmv.txt
+fullApp.txt
 
 # testing
 /coverage
