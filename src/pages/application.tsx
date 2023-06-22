@@ -224,7 +224,7 @@ const Application: React.FC = () => {
                     <span className='w-full text-start text-base'>{`Date of Loss : ${data.dol}`}</span>
                     <span className='w-full text-start text-base'>{`Keterangan:`}</span>
                     <span className='w-full text-start text-base'>&nbsp;</span>
-                    <div className='w-full h-40 border-solid border-2 rounded-xl p-1 border-gray-300 text-start text-base overflow-y-auto'>{data.kronologi}</div>
+                    <textarea className='w-full h-40 border-solid border-2 rounded-xl p-1 border-gray-300 text-start text-base overflow-y-auto'>{data.kronologi}</textarea>
                   <button className='text-sky-600 text-lg mt-2 font-medium transition-transform transform-gpu duration-300 active:scale-90' onClick={() => setShowModalK(-1)}>Close</button>
                   </div>
                 </div>
