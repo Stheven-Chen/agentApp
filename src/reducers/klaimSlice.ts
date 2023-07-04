@@ -13,22 +13,24 @@ interface State{
     kronologi:any;
     klaim:any
     addedDate:any;
-    status:any
+    status:any;
+    agentName:any
 }
 
 const initialState:State={
-    addedDate:[],
-    nPolis:[],
-    insuredName:[],
-    periode:[],
-    polis:[],
-    okupasi:[],
-    dol:[],
-    kronologi:[],
-    klaim:[],
-    COB:[],
-    type:[],
-    status:[]
+    addedDate:'',
+    nPolis:'',
+    insuredName:'',
+    periode:'',
+    polis:'',
+    okupasi:'',
+    dol:'',
+    kronologi:'',
+    klaim:'',
+    COB:'',
+    type:'',
+    status:'',
+    agentName:''
 }
 
 export const klaimSlice=createSlice({
@@ -36,19 +38,29 @@ export const klaimSlice=createSlice({
     initialState,
     reducers:{
         setKlaim:(state, action)=>{
-            state.addedDate.push(action.payload.addedDate);
-            state.nPolis.push(action.payload.nPolis);
-            state.insuredName.push(action.payload.insuredName);
-            state.periode.push(action.payload.periode);
-            state.polis.push(action.payload.polis);
-            state.okupasi.push(action.payload.okupasi);
-            state.dol.push(action.payload.dol);
-            state.kronologi.push(action.payload.kronologi);
-            state.klaim.push(action.payload.klaim);
-            state.COB.push(action.payload.COB);
-            state.type.push(action.payload.type);
-            state.status.push(action.payload.status);
+            state.addedDate = action.payload.addedDate;
+            state.nPolis = action.payload.nPolis;
+            state.insuredName = action.payload.insuredName;
+            state.periode = action.payload.periode;
+            state.polis = action.payload.polis;
+            state.okupasi = action.payload.okupasi;
+            state.dol = action.payload.dol;
+            state.kronologi = action.payload.kronologi;
+            state.klaim = action.payload.klaim;
+            state.COB = action.payload.COB;
+            state.type = action.payload.type;
+            state.status = action.payload.status;
+            state.agentName = action.payload.agentName;
+
+            fetch('https://agentserver-production.up.railway.app/newklaim', {
+        method:"POST", 
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body:JSON.stringify(state),
+      })
         }
+
     }
 }) 
 

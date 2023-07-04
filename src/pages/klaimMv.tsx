@@ -4,10 +4,11 @@ import Tab from '../component/tab';
 import MainBox from '../component/mainBox';
 import Input from '../component/input';
 import FabComponent from '../component/fab';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setKlaim } from '../reducers/klaimSlice';
 import { useNavigate } from 'react-router-dom';
 import useToday from '../component/function/today';
+import {RootState} from '../reducers/userSlice'
 
 const KlaimMv = () => {
   const [data, setData] = useState({
@@ -19,6 +20,7 @@ const KlaimMv = () => {
     dol: '',
     kronologi: '',
   });
+  const { username } = useSelector((state: RootState) => state.username);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const today = useToday();
@@ -45,7 +47,8 @@ const KlaimMv = () => {
         dol: data.dol,
         kronologi: data.kronologi,
         addedDate: today,
-        status:'First Report'
+        status:'First Report',
+        agentName:username
       })
     );
     navigate('/agent/application/');

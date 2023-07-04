@@ -4,13 +4,13 @@ import Tab from '../component/tab';
 import MainBox from '../component/mainBox';
 import FabComponent from '../component/fab';
 import Input from '../component/input';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setNew } from '../reducers/newSlice';
 import {useNavigate, useLocation} from 'react-router-dom';
 import formatCurrency from '../component/function/formatcurrency';
 import useToday from '../component/function/today';
 import  SignaturePad  from "signature_pad";
-
+import {RootState} from '../reducers/userSlice'
 
 const NewAppMv2: React.FC = () => {
   const [data, setData] = useState<any>({
@@ -32,6 +32,7 @@ const NewAppMv2: React.FC = () => {
     endD:'',
     perluasan:[]
       });
+  const { username } = useSelector((state: RootState) => state.username);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [merekMobil, setMerekMobil] = useState([]);
   const [modelMobil, setModelMobil] = useState([]);
@@ -169,7 +170,8 @@ const NewAppMv2: React.FC = () => {
       email,
       COB,
       insuredName,
-      status:'Approval'
+      status:'Approval',
+      agentName:username
     }))
 
     navigate('/agent/application/')

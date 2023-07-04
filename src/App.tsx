@@ -1,5 +1,5 @@
-import React, { lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+  import React, { lazy, Suspense } from 'react';
+  import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Overlay from './component/overlay'
 
 // Import komponen halaman dengan lazy loading

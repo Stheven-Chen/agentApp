@@ -4,12 +4,13 @@ import Tab from '../component/tab';
 import MainBox from '../component/mainBox';
 import FabComponent from '../component/fab';
 import Input from '../component/input';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setNew } from '../reducers/newSlice';
 import {useNavigate, useLocation} from 'react-router-dom';
 import formatCurrency from '../component/function/formatcurrency';
 import useToday from '../component/function/today';
 import  SignaturePad  from "signature_pad";
+import {RootState} from '../reducers/userSlice'
 
 
 const NewApp2: React.FC = () => {
@@ -27,6 +28,7 @@ const NewApp2: React.FC = () => {
     startD:'',
     endD:'',
   });
+  const { username } = useSelector((state: RootState) => state.username);
   const [periode,setPeriode]=useState('');
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const dispatch = useDispatch();
@@ -36,7 +38,9 @@ const NewApp2: React.FC = () => {
   const signaturePad = useRef<SignaturePad | null>(null);
   const [sign, setSign] = useState<string>("");
   const {state} = useLocation()
-  const {insuredName, NIK, address, phone, email, COB} = state
+  const {insuredName, NIK, address, phone, email, COB, ktp} = state
+  const [selectOkupasi, setSelectOkupasi] = useState([]);
+  const [rate, setRate] = useState(0);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -57,6 +61,9 @@ const NewApp2: React.FC = () => {
     } else {
       setData((prevState:any) => ({ ...prevState, addedDate: today, type: "New", [name]: value }));
     }
+    if (name === "polis" && value === "PAR") { 
+      setSelectedOptions(["others"]);
+    }
   
   };
   
@@ -64,15 +71,38 @@ const NewApp2: React.FC = () => {
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     const isChecked = event.target.checked;
-
+  
     if (isChecked) {
-      // Tambahkan ke array jika checkbox di-checked
       setSelectedOptions([...selectedOptions, value]);
+  
+      if (value === 'rsmdcc') {
+        setRate(rate + 0.0005);
+      }
+  
+      if (value === 'tsfwd') {
+        setRate(rate + 0.0005);
+      }
+  
+      if (value === 'others') {
+        setRate(rate + 0.000005);
+      }
     } else {
-      // Hapus dari array jika checkbox di-unchecked
       setSelectedOptions(selectedOptions.filter((option) => option !== value));
+  
+      if (value === 'rsmdcc') {
+        setRate(rate - 0.0005);
+      }
+  
+      if (value === 'tsfwd') {
+        setRate(rate - 0.0005);
+      }
+  
+      if (value === 'others') {
+        setRate(rate - 0.000005);
+      }
     }
   };
+  
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -89,11 +119,34 @@ const NewApp2: React.FC = () => {
   const save = () =>{
     const dataURL = signaturePad.current?.toDataURL();
   if (dataURL) {
-    setSign(dataURL); // save signature to state
+    setSign(dataURL); 
   }
   console.log(sign)
 
   }
+
+  useEffect(()=>{
+    const fetchOkupasi = async () =>{
+      try{
+        const res = await fetch('https://agentserver-production.up.railway.app/okupasi');
+        const okupasi = await res.json()
+        setSelectOkupasi(okupasi);
+
+        if(data.okupasi){
+          const selectedOkupasi = okupasi.find((item: { okupasi: string }) => item.okupasi === data.okupasi);
+          console.log(selectedOkupasi);
+
+          if(selectedOkupasi){
+            setRate(selectedOkupasi.rate);
+          } 
+        }
+        
+      }catch(e){
+        throw e
+      }
+    }
+    fetchOkupasi()
+  },[data.okupasi])
 
   const submit = (e:React.FormEvent<HTMLFormElement>) =>{
     e.preventDefault();
@@ -116,7 +169,10 @@ const NewApp2: React.FC = () => {
       email,
       COB,
       insuredName,
-      status:"Approval"
+      status:"Approval",
+      rate, 
+      ktp,
+      agentName:username
     }))
 
     navigate('/agent/application/')
@@ -211,8 +267,9 @@ const NewApp2: React.FC = () => {
                   className="rounded-xl pl-3 w-full h-10 mt-5 font-Poppins font-semibold"
                 >
                   <option value="">Pilih okupasi</option>
-                  <option value="Rumah Tinggal">Rumah Tinggal</option>
-                  <option value="Ruko">Ruko</option>
+                  {selectOkupasi.map((item: { okupasi: string }, index:number) => {
+                    return <option key={index} value={item.okupasi}>{item.okupasi}</option>;
+                  })}
                 </select>
               </div>
               <div className={`relative my-5`}>

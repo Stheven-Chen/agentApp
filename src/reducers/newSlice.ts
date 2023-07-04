@@ -36,36 +36,44 @@ interface State {
   komisi:any
   diskon:any
   sign:any
-  status:any
+  status:any;
+  rate:any
+  ktp:any
+  agentName:any;
+  potentialPremi:any
 }
 
 const initialState: State ={
-  addedDate: [],
-  type: [],
-  insuredName: [],
-  COB: [],
-  NIK: [],
-  address: [],
-  phone: [],
-  email: [],
-  polis: [],
-  merek: [],
-  model: [],
-  year: [],
-  rangka: [],
-  mesin: [],
-  plat: [],
-  okupasi: [],
-  perluasan: [],
-  tsi: [],
-  periode: [],
-  kelas: [],
-  alamatObj: [],
-  newApp: [],
-  komisi:[],
-  diskon:[],
-  sign:[],
-  status:[]
+  addedDate: '',
+  type: '',
+  insuredName: '',
+  COB: '',
+  NIK: '',
+  address: '',
+  phone: '',
+  email: '',
+  polis: '',
+  merek: '',
+  model: '',
+  year: '',
+  rangka: '',
+  mesin: '',
+  plat: '',
+  okupasi: '',
+  perluasan: '',
+  tsi: '',
+  periode: '',
+  kelas: '',
+  alamatObj: '',
+  newApp: '',
+  komisi:0,
+  diskon:0,
+  sign:'',
+  status:'',
+  rate:0,
+  ktp:'',
+  agentName:'',
+  potentialPremi:0
 };
 
 export const newSlice = createSlice({
@@ -77,31 +85,74 @@ export const newSlice = createSlice({
       // state.newApp.push(action.payload.newApp);
 
       // Update other properties using the latest values
-      state.addedDate.push( action.payload.addedDate);
-      state.type.push( action.payload.type);
-      state.insuredName.push(action.payload.insuredName);
-      state.COB.push( action.payload.COB);
-      state.NIK.push( action.payload.NIK);
-      state.address.push( action.payload.address);
-      state.phone.push( action.payload.phone);
-      state.email.push( action.payload.email);
-      state.polis.push( action.payload.polis);
-      state.merek.push( action.payload.merek);
-      state.model.push( action.payload.model);
-      state.year.push( action.payload.year);
-      state.rangka.push( action.payload.rangka);
-      state.mesin.push( action.payload.mesin);
-      state.plat.push( action.payload.plat);
-      state.okupasi.push( action.payload.okupasi);
-      state.perluasan.push( action.payload.perluasan);
-      state.tsi.push( action.payload.tsi);
-      state.periode.push( action.payload.periode);
-      state.kelas.push( action.payload.kelas);
-      state.alamatObj.push( action.payload.alamatObj);
-      state.komisi.push( action.payload.komisi);
-      state.diskon.push( action.payload.diskon);
-      state.sign.push( action.payload.sign);
-      state.status.push( action.payload.status);
+      state.addedDate= action.payload.addedDate;
+      state.type= action.payload.type;
+      state.insuredName=action.payload.insuredName;
+      state.COB= action.payload.COB;
+      state.NIK= action.payload.NIK;
+      state.address= action.payload.address;
+      state.phone= action.payload.phone;
+      state.email= action.payload.email;
+      state.polis= action.payload.polis;
+      state.merek= action.payload.merek;
+      state.model= action.payload.model;
+      state.year= action.payload.year;
+      state.rangka= action.payload.rangka;
+      state.mesin= action.payload.mesin;
+      state.plat= action.payload.plat;
+      state.okupasi= action.payload.okupasi;
+      state.perluasan= action.payload.perluasan;
+      state.tsi= action.payload.tsi.replace(/ /g, '').replace(/Rp/g, '').replace(/\./g, '');
+      state.periode= action.payload.periode;
+      state.kelas= action.payload.kelas;
+      state.alamatObj= action.payload.alamatObj;
+      state.komisi= action.payload.komisi;
+      state.diskon= action.payload.diskon;
+      state.sign= action.payload.sign;
+      state.status= action.payload.status;
+      state.rate= action.payload.rate;
+      state.ktp= action.payload.ktp;
+      state.agentName= action.payload.agentName;
+      state.potentialPremi=(Math.ceil((parseInt(state.tsi)*parseFloat(state.rate))-((parseInt(state.tsi)*parseFloat(state.rate))*(parseFloat(state.diskon)/100))))
+
+      // const {addedDate,
+      //   type,
+      //   insuredName,
+      //   COB,
+      //   NIK,
+      //   address, 
+      //   phone,
+      //   email,
+      //   polis,
+      //   merek,
+      //   model,
+      //   year,
+      //   rangka,
+      //   mesin,
+      //   plat,
+      //   okupasi,
+      //   perluasan,
+      //   tsi,
+      //   periode,
+      //   kelas,
+      //   alamatObj,
+      //   komisi,
+      //   diskon,
+      //   sign,
+      //   status,
+      //   rate,
+      //   ktp,
+      //   agentName,
+      //   potentialPremi} = state
+
+
+      fetch('https://agentserver-production.up.railway.app/new', {
+        method:"POST", 
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body:JSON.stringify(state),
+      })
     },
   },
 });
