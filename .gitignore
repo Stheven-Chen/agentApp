@@ -9,6 +9,10 @@
 appH.txt
 appmv.txt
 fullApp.txt
+newSlice.txt
+rateMV.json
+wilayah.json
+EQZone.json
 
 # testing
 /coverage

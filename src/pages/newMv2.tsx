@@ -30,7 +30,8 @@ const NewAppMv2: React.FC = () => {
     diskon:'',
     startD:'',
     endD:'',
-    perluasan:[]
+    perluasan:[],
+    wil:0
       });
   const { username } = useSelector((state: RootState) => state.username);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
@@ -44,6 +45,7 @@ const NewAppMv2: React.FC = () => {
   const signaturePad = useRef<SignaturePad | null>(null);
   const [sign, setSign] = useState<string>("");
   const {state} = useLocation()
+  // const [rate,setRate]=useState(0)
   const {insuredName, NIK, address, phone, email, COB} = state
 
 
@@ -63,6 +65,7 @@ const NewAppMv2: React.FC = () => {
         [name]: value,
         endD: endDate.toISOString().split("T")[0] // Mengubah format tanggal ke "yyyy-mm-dd"
       }));
+      
       setPeriode(`${startDate.toISOString().split('T')[0].toString()} - ${endDate.toISOString().split('T')[0].toString()}`);
     } else {
       setData((prevState:any) => ({ ...prevState, addedDate: today, type: "New", [name]: value }));
@@ -101,7 +104,8 @@ const NewAppMv2: React.FC = () => {
   // };
 
   
-
+  
+  
 
   
   useEffect(() => {

@@ -183,9 +183,9 @@ const Application: React.FC = () => {
     setShowModalK(index);
   };
 
-  const downloadFile = () =>{
+  // const downloadFile = () =>{
 
-  }
+  // }
 
   return (
     <>
