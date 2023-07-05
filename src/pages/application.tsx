@@ -160,7 +160,7 @@ const Application: React.FC = () => {
       }
     } 
     fetchData()
-  }, [])
+  })
   useEffect(()=>{
     const fetchData = async() =>{
       try{
@@ -172,7 +172,7 @@ const Application: React.FC = () => {
       }
     } 
     fetchData()
-  }, [])
+  })
 
   console.log(klaimData)
 
