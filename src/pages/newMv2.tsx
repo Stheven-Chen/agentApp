@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Nav from '../component/nav';
 import Tab from '../component/tab';
 import MainBox from '../component/mainBox';
@@ -6,124 +6,177 @@ import FabComponent from '../component/fab';
 import Input from '../component/input';
 import { useDispatch, useSelector } from 'react-redux';
 import { setNew } from '../reducers/newSlice';
-import {useNavigate, useLocation} from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import formatCurrency from '../component/function/formatcurrency';
 import useToday from '../component/function/today';
-import  SignaturePad  from "signature_pad";
-import {RootState} from '../reducers/userSlice'
+import SignaturePad from 'signature_pad';
+import { RootState } from '../reducers/userSlice';
 
 const NewAppMv2: React.FC = () => {
   const [data, setData] = useState<any>({
     polis: '',
     periode: '',
     okupasi: '',
-    merek:'',
-    tsi:'',
-    addedDate:'',
-    type:'',
-    model:'',
-    year:'',
-    mesin:'',
-    rangka:'',
-    plat:'',
-    komisi:'',
-    diskon:'',
-    startD:'',
-    endD:'',
-    perluasan:[],
-    wil:0
-      });
+    merek: '',
+    tsi: '',
+    addedDate: '',
+    type: '',
+    model: '',
+    year: '',
+    mesin: '',
+    rangka: '',
+    plat: '',
+    komisi: '',
+    diskon: '',
+    startD: '',
+    endD: '',
+    perluasan: [],
+    wil: 0,
+  });
   const { username } = useSelector((state: RootState) => state.username);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [merekMobil, setMerekMobil] = useState([]);
   const [modelMobil, setModelMobil] = useState([]);
   const dispatch = useDispatch();
-  const navigate= useNavigate();
+  const navigate = useNavigate();
   const today = useToday();
-    const [periode,setPeriode]=useState('');
-    const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [periode, setPeriode] = useState('');
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const signaturePad = useRef<SignaturePad | null>(null);
-  const [sign, setSign] = useState<string>("");
-  const {state} = useLocation()
-  // const [rate,setRate]=useState(0)
-  const {insuredName, NIK, address, phone, email, COB} = state
+  const [sign, setSign] = useState<string>('');
+  const { state } = useLocation();
+  const [rate, setRate] = useState(0);
+  const { insuredName, NIK, address, phone, email, COB } = state;
 
+  const getRate = async (tsi: number, wil: number, polis: string) => {
+    if (data.tsi && data.wil && data.polis) {
+      try {
+        const res = await fetch(`https://agentserver-production.up.railway.app/ratemv?min=${tsi}&max=${tsi}&wil=${wil}&type=${polis}`, {
+          method: 'POST',
+        });
+        const rateData = await res.json();
+        setRate(rateData[0].rate);
+      } catch (e) {
+        throw e;
+      }
+    } else {
+      setRate(0);
+    }
+  };
 
+  const getPerluasan = async (wil: number, polis: string, cover: string) => {
+    let perluasanData = null;
+    if (data.wil && data.polis) {
+      try {
+        const res = await fetch(`https://agentserver-production.up.railway.app/ratemv?wil=${wil}&type=${polis}&cover=${cover}`, {
+          method: 'POST',
+        });
+        if (res.ok) {
+          perluasanData = await res.json();
+          setRate(rate + perluasanData[0].rate);
+        } else {
+          throw new Error('Failed to fetch perluasan data');
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    return perluasanData;
+  };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-  
-    if (name === "startD") {
-      // Menghitung tanggal 1 tahun kemudian dari startD
+
+    if (name === 'startD') {
       const startDate = new Date(value);
-      const endDate = new Date(startDate.getFullYear() + 1, startDate.getMonth(), startDate.getDate()+1);
-  
-      setData((prevState:any) => ({
+      const endDate = new Date(startDate.getFullYear() + 1, startDate.getMonth(), startDate.getDate() + 1);
+
+      setData((prevState: any) => ({
         ...prevState,
         addedDate: today,
-        type: "New",
+        type: 'New',
         [name]: value,
-        endD: endDate.toISOString().split("T")[0] // Mengubah format tanggal ke "yyyy-mm-dd"
+        endD: endDate.toISOString().split('T')[0],
       }));
-      
+
       setPeriode(`${startDate.toISOString().split('T')[0].toString()} - ${endDate.toISOString().split('T')[0].toString()}`);
+    } else if (name === 'plat') {
+      const plat = value.split(' ')[0];
+      setData((prevData: any) => ({
+        ...prevData,
+        [name]:value,
+      }));
+      if (plat) {
+        try {
+          const res = await fetch(`https://agentserver-production.up.railway.app/plat?plat=${plat}`, {
+            method: 'POST',
+          });
+          if (res.ok) {
+            const dataWil = await res.json();
+            setData((prevData: any) => ({
+              ...prevData,
+              [name]: value,
+              wil: dataWil.wil,
+            }));
+          } else {
+            throw new Error('Failed to fetch wil data');
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
     } else {
-      setData((prevState:any) => ({ ...prevState, addedDate: today, type: "New", [name]: value }));
+      setData((prevState: any) => ({ ...prevState, addedDate: today, type: 'New', [name]: value }));
+      getRate(
+        parseInt(data.tsi.replace(/ /g, '').replace(/Rp/g, '').replace(/\./g, '')),
+        data.wil,
+        data.polis
+      );
     }
-  
   };
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+
+  const handleCheckboxChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     const isChecked = event.target.checked;
-
+  
     if (isChecked) {
-      // Tambahkan ke array jika checkbox di-checked
       setSelectedOptions([...selectedOptions, value]);
+      const perluasanData = await getPerluasan(data.wil, data.polis, value);
+      if (perluasanData) {
+        setRate(rate + perluasanData[0].rate);
+      }
     } else {
-      // Hapus dari array jika checkbox di-unchecked
       setSelectedOptions(selectedOptions.filter((option) => option !== value));
+      const perluasanData = await getPerluasan(data.wil, data.polis, value);
+      if (perluasanData) {
+        setRate(rate - perluasanData[0].rate);
+      }
     }
   };
+  
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (canvas) {
       const signaturePadOptions = {
-        backgroundColor: "rgb(255, 255, 255)",
-        penColor: "rgb(0, 0, 0)",
+        backgroundColor: 'rgb(255, 255, 255)',
+        penColor: 'rgb(0, 0, 0)',
       };
       signaturePad.current = new SignaturePad(canvas, signaturePadOptions);
-      signaturePad.current.clear(); // clear signature
+      signaturePad.current.clear();
     }
   }, []);
 
-  // const handleClear = () => {
-  //   signaturePad.current?.clear();
-  //   setSign(""); // reset sign state
-  //   console.log('clicked')
-  // };
-
-  
-  
-  
-
-  
   useEffect(() => {
     const fetchMerekMobil = async () => {
       try {
-        // const res = await fetch('http://192.168.137.1:3001/');
         const res = await fetch('https://agentserver-production.up.railway.app/');
         const merek = await res.json();
         setMerekMobil(merek);
-        console.log(merek)
-  
-        // Cek apakah ada merek yang dipilih
+
         if (data.merek) {
-          // Temukan model berdasarkan merek yang dipilih
           const selectedMerek = merek.find((item: { merek: string }) => item.merek === data.merek);
-          console.log(selectedMerek.model)
-  
-          // Jika model ditemukan, set state selectedModel dengan model-model yang tersedia
+
           if (selectedMerek) {
             setModelMobil(selectedMerek.model);
           }
@@ -132,54 +185,51 @@ const NewAppMv2: React.FC = () => {
         throw e;
       }
     };
-   
-  
+
     fetchMerekMobil();
   }, [data.merek]);
-  
-  
 
-    const save = () =>{
-      const dataURL = signaturePad.current?.toDataURL();
+  const save = () => {
+    const dataURL = signaturePad.current?.toDataURL();
     if (dataURL) {
-      setSign(dataURL); // save signature to state
+      setSign(dataURL);
     }
-    console.log(sign)
+  };
 
-    }
-  
-
-  const submit = (e:React.FormEvent<HTMLFormElement>) =>{
+  const submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(setNew({
-      tsi:data.tsi, 
-      polis:data.polis, 
-      periode:periode, 
-      okupasi:data.okupasi, 
-      addedDate:data.addedDate,
-      type:data.type,
-      merek:data.merek,
-      model:data.model,
-      year:data.year,
-      mesin:data.mesin,
-      plat:data.plat,
-      rangka:data.rangka,
-      diskon:data.diskon,
-      komisi:25-data.diskon,
-      perluasan:selectedOptions,
-      sign:sign,
-      NIK,
-      address,
-      phone,
-      email,
-      COB,
-      insuredName,
-      status:'Approval',
-      agentName:username
-    }))
+    dispatch(
+      setNew({
+        tsi: data.tsi,
+        polis: data.polis,
+        periode: periode,
+        okupasi: data.okupasi,
+        addedDate: data.addedDate,
+        type: data.type,
+        merek: data.merek,
+        model: data.model,
+        year: data.year,
+        mesin: data.mesin,
+        plat: data.plat,
+        rangka: data.rangka,
+        diskon: data.diskon,
+        komisi: 25 - data.diskon,
+        perluasan: selectedOptions,
+        sign: sign,
+        NIK,
+        address,
+        phone,
+        email,
+        COB,
+        insuredName,
+        status: 'Approval',
+        agentName: username,
+        rate
+      })
+    );
 
-    navigate('/agent/application/')
-  }
+    navigate('/agent/application/');
+  };
  
   
   return (
@@ -407,7 +457,7 @@ const NewAppMv2: React.FC = () => {
                 />
                   <span>EQVET</span>
                 </div>
-                <div className="flex items-center">
+                {/* <div className="flex items-center">
                 <input
                   type="checkbox"
                   name="perluasan"
@@ -417,7 +467,7 @@ const NewAppMv2: React.FC = () => {
                   className="mr-2"
                 />
                   <span>TS</span>
-                </div>
+                </div> */}
               </div>
               <div className={`relative my-5`}>
                 <label htmlFor="diskon" className={`absolute left-3 -top-2.5 transition-all duration-200`}>

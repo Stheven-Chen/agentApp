@@ -160,7 +160,7 @@ const Application: React.FC = () => {
       }
     } 
     fetchData()
-  })
+  },[username])
   useEffect(()=>{
     const fetchData = async() =>{
       try{
@@ -172,7 +172,7 @@ const Application: React.FC = () => {
       }
     } 
     fetchData()
-  })
+  },[username])
 
   console.log(klaimData)
 
@@ -234,8 +234,9 @@ const Application: React.FC = () => {
                             <span className='w-full text-start text-base'>{`No Polisi: ${data.plat}`}</span>
                             <span className='w-full text-start text-base'>{`No Mesin: ${data.mesin}`}</span>
                             <span className='w-full text-start text-base'>{`No rangka: ${data.rangka}`}</span>
-                            <span className='w-full text-start text-base'>{`Perluasan: ${data.perluasan}`}</span>
+                            <span className='w-full text-start text-base'>{`Perluasan: ${data.perluasan.map((item:string) => item).join(" || ").toUpperCase()}`}</span>
                             <span className='w-full text-start text-base'>{`Diskon: ${data.diskon}%`}</span>
+                            <span className='w-full text-start text-base'>{`Potential Premi: ${formatCurrency(data.potentialPremi.toString())}`}</span>
                             <img src={data.sign} alt="sign" className='' />
                           <button className='text-sky-600 text-lg font-medium transition-transform transform-gpu duration-300 active:scale-90' onClick={()=>setShowModal(-1)}>Close</button>
                           </div>
