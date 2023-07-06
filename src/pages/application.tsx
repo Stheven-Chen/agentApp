@@ -174,7 +174,6 @@ const Application: React.FC = () => {
     fetchData()
   },[username])
 
-  console.log(klaimData)
 
   const modal = (index: number) => {
     setShowModal(index);

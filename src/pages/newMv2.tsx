@@ -45,7 +45,8 @@ const NewAppMv2: React.FC = () => {
   const signaturePad = useRef<SignaturePad | null>(null);
   const [sign, setSign] = useState<string>('');
   const { state } = useLocation();
-  const [rate, setRate] = useState(0);
+  const [rateDasar, setRateDasar] = useState(0);
+  const [ratePerluasan, setRatePerluasan] = useState(0);
   const { insuredName, NIK, address, phone, email, COB } = state;
 
   const getRate = async (tsi: number, wil: number, polis: string) => {
@@ -55,33 +56,34 @@ const NewAppMv2: React.FC = () => {
           method: 'POST',
         });
         const rateData = await res.json();
-        setRate(rateData[0].rate);
+        setRateDasar(rateData[0].rate);
       } catch (e) {
         throw e;
       }
     } else {
-      setRate(0);
+      setRateDasar(0);
     }
   };
 
   const getPerluasan = async (wil: number, polis: string, cover: string) => {
-    let perluasanData = null;
-    if (data.wil && data.polis) {
-      try {
-        const res = await fetch(`https://agentserver-production.up.railway.app/ratemv?wil=${wil}&type=${polis}&cover=${cover}`, {
-          method: 'POST',
-        });
-        if (res.ok) {
-          perluasanData = await res.json();
-          setRate(rate + perluasanData[0].rate);
-        } else {
-          throw new Error('Failed to fetch perluasan data');
-        }
-      } catch (e) {
-        console.error(e);
+    let perluasanRate = 0;
+    
+    try {
+      const res = await fetch(`https://agentserver-production.up.railway.app/ratemv?wil=${wil}&type=${polis}&cover=${cover}`, {
+        method: 'POST',
+      });
+  
+      if (res.ok) {
+        const perluasanData = await res.json();
+        perluasanRate = perluasanData[0].rate;
+      } else {
+        throw new Error('Failed to fetch perluasan data');
       }
+    } catch (e) {
+      console.error(e);
     }
-    return perluasanData;
+  
+    return perluasanRate;
   };
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -141,16 +143,12 @@ const NewAppMv2: React.FC = () => {
   
     if (isChecked) {
       setSelectedOptions([...selectedOptions, value]);
-      const perluasanData = await getPerluasan(data.wil, data.polis, value);
-      if (perluasanData) {
-        setRate(rate + perluasanData[0].rate);
-      }
+      const perluasanRate = await getPerluasan(data.wil, data.polis, value);
+      setRatePerluasan((prevRate) => prevRate + perluasanRate);
     } else {
       setSelectedOptions(selectedOptions.filter((option) => option !== value));
-      const perluasanData = await getPerluasan(data.wil, data.polis, value);
-      if (perluasanData) {
-        setRate(rate - perluasanData[0].rate);
-      }
+      const perluasanRate = await getPerluasan(data.wil, data.polis, value);
+      setRatePerluasan((prevRate) => prevRate - perluasanRate);
     }
   };
   
@@ -196,6 +194,12 @@ const NewAppMv2: React.FC = () => {
     }
   };
 
+  useEffect(()=>{
+    console.log(`rateDasar; ${rateDasar}`)
+    console.log(`ratePerluasan; ${ratePerluasan}`)
+    console.log(`Rate: ${ratePerluasan+rateDasar}`)
+  },[ratePerluasan, rateDasar])
+
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(
@@ -224,10 +228,12 @@ const NewAppMv2: React.FC = () => {
         insuredName,
         status: 'Approval',
         agentName: username,
-        rate
+        rate:rateDasar+ratePerluasan
       })
     );
-
+      console.log(`
+      rate ${rateDasar+ratePerluasan} premi: ${ parseInt(data.tsi.replace(/ /g, '').replace(/Rp/g, '').replace(/\./g, ''))*rateDasar+ratePerluasan}
+      `)
     navigate('/agent/application/');
   };
  
@@ -457,7 +463,7 @@ const NewAppMv2: React.FC = () => {
                 />
                   <span>EQVET</span>
                 </div>
-                {/* <div className="flex items-center">
+                <div className="flex items-center">
                 <input
                   type="checkbox"
                   name="perluasan"
@@ -467,7 +473,7 @@ const NewAppMv2: React.FC = () => {
                   className="mr-2"
                 />
                   <span>TS</span>
-                </div> */}
+                </div>
               </div>
               <div className={`relative my-5`}>
                 <label htmlFor="diskon" className={`absolute left-3 -top-2.5 transition-all duration-200`}>

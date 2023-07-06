@@ -40,7 +40,8 @@ const NewApp2: React.FC = () => {
   const {state} = useLocation()
   const {insuredName, NIK, address, phone, email, COB, ktp} = state
   const [selectOkupasi, setSelectOkupasi] = useState([]);
-  const [rate, setRate] = useState(0);
+  const [rateDasar, setRateDasar] = useState(0);
+  const [ratePerluasan, setRatePerluasan] = useState(0);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -76,29 +77,29 @@ const NewApp2: React.FC = () => {
       setSelectedOptions([...selectedOptions, value]);
   
       if (value === 'rsmdcc') {
-        setRate(rate + 0.0005);
+        setRatePerluasan((prevRatePerluasan)=>prevRatePerluasan + 0.0005);
       }
   
       if (value === 'tsfwd') {
-        setRate(rate + 0.0005);
+        setRatePerluasan((prevRatePerluasan)=>prevRatePerluasan + 0.0005);
       }
   
       if (value === 'others') {
-        setRate(rate + 0.000005);
+        setRatePerluasan((prevRatePerluasan)=>prevRatePerluasan + 0.000005);
       }
     } else {
       setSelectedOptions(selectedOptions.filter((option) => option !== value));
   
       if (value === 'rsmdcc') {
-        setRate(rate - 0.0005);
+        setRatePerluasan((prevRatePerluasan)=>prevRatePerluasan - 0.0005);
       }
   
       if (value === 'tsfwd') {
-        setRate(rate - 0.0005);
+        setRatePerluasan((prevRatePerluasan)=>prevRatePerluasan - 0.0005);
       }
   
       if (value === 'others') {
-        setRate(rate - 0.000005);
+        setRatePerluasan((prevRatePerluasan)=>prevRatePerluasan - 0.000005);
       }
     }
   };
@@ -137,7 +138,7 @@ const NewApp2: React.FC = () => {
           console.log(selectedOkupasi);
 
           if(selectedOkupasi){
-            setRate(selectedOkupasi.rate);
+            setRateDasar(selectedOkupasi.rate);
           } 
         }
         
@@ -147,6 +148,12 @@ const NewApp2: React.FC = () => {
     }
     fetchOkupasi()
   },[data.okupasi])
+
+  useEffect(()=>{
+    console.log(`rateDasar; ${rateDasar}`)
+    console.log(`ratePerluasan; ${ratePerluasan}`)
+    console.log(`Rate: ${ratePerluasan+rateDasar}`)
+  },[ratePerluasan, rateDasar])
 
   const submit = (e:React.FormEvent<HTMLFormElement>) =>{
     e.preventDefault();
@@ -170,7 +177,7 @@ const NewApp2: React.FC = () => {
       COB,
       insuredName,
       status:"Approval",
-      rate, 
+      rate:ratePerluasan+rateDasar, 
       ktp,
       agentName:username
     }))
