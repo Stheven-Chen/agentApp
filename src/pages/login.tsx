@@ -32,7 +32,6 @@ const Login: React.FC = () => {
             alert("Username atau Password Salah");
         }else{
              dispatch(login({username, nama:filterUser.nama}));
-            console.log(filterUser.nama)
             navigate('/agent/home');
         }
     }catch(e){

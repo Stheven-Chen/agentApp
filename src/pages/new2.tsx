@@ -10,7 +10,8 @@ import {useNavigate, useLocation} from 'react-router-dom';
 import formatCurrency from '../component/function/formatcurrency';
 import useToday from '../component/function/today';
 import  SignaturePad  from "signature_pad";
-import {RootState} from '../reducers/userSlice'
+import {RootState} from '../reducers/userSlice';
+
 
 
 const NewApp2: React.FC = () => {
@@ -19,15 +20,26 @@ const NewApp2: React.FC = () => {
     alamatObj: '',
     periode: '',
     okupasi: '',
-    kelas:'',
-    tsi:'',
-    addedDate:'',
-    type:'',
-    diskon:'',
-    komisi:'',
-    startD:'',
-    endD:'',
+    kelas: '',
+    tsi: '',
+    addedDate: '',
+    type: '',
+    diskon: '',
+    komisi: '',
+    startD: '',
+    endD: '',
+    sr: [
+      { arah: 'Kiri', okupasisr: '', jarak: '' },
+      { arah: 'Kanan', okupasisr: '', jarak: '' },
+      { arah: 'Depan', okupasisr: '', jarak: '' },
+      { arah: 'Belakang', okupasisr: '', jarak: '' }
+    ]
   });
+  
+  const [tsiComp, setTsiComp] = useState<any>({
+    bangunan:'',
+    content:''
+  })
   const { username } = useSelector((state: RootState) => state.username);
   const [periode,setPeriode]=useState('');
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
@@ -49,9 +61,9 @@ const NewApp2: React.FC = () => {
     if (name === "startD") {
       // Menghitung tanggal 1 tahun kemudian dari startD
       const startDate = new Date(value);
-      const endDate = new Date(startDate.getFullYear() + 1, startDate.getMonth(), startDate.getDate()+1);
+      const endDate = new Date(startDate.getFullYear() + 1, startDate.getMonth(), startDate.getDate() + 1);
   
-      setData((prevState:any) => ({
+      setData((prevState: any) => ({
         ...prevState,
         addedDate: today,
         type: "New",
@@ -59,14 +71,38 @@ const NewApp2: React.FC = () => {
         endD: endDate.toISOString().split("T")[0] // Mengubah format tanggal ke "yyyy-mm-dd"
       }));
       setPeriode(`${startDate.toISOString().split('T')[0].toString()} - ${endDate.toISOString().split('T')[0].toString()}`);
-    } else {
-      setData((prevState:any) => ({ ...prevState, addedDate: today, type: "New", [name]: value }));
-    }
-    if (name === "polis" && value === "PAR") { 
-      setSelectedOptions(["others"]);
-    }
+    } else if (name.startsWith("jarak")) {
+      const arah = name.replace("jarak", "");
   
+      setData((prevState: any) => ({
+        ...prevState,
+        sr: prevState.sr.map((item: any) =>
+          item.arah === arah ? { ...item, jarak: value } : item
+        )
+      }));
+    } else if (name.startsWith("okupasisr")) {
+      const arah = name.replace("okupasisr", "");
+  
+      setData((prevState: any) => ({
+        ...prevState,
+        sr: prevState.sr.map((item: any) =>
+          item.arah === arah ? { ...item, okupasisr: value } : item
+        )
+      }));
+    } else {
+      setData((prevState: any) => ({
+        ...prevState,
+        addedDate: today,
+        type: "New",
+        [name]: value
+      }));
+      setTsiComp((prevComp: any) => ({
+        ...prevComp,
+        [name]: value
+      }));
+    }
   };
+  
   
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -158,7 +194,7 @@ const NewApp2: React.FC = () => {
   const submit = (e:React.FormEvent<HTMLFormElement>) =>{
     e.preventDefault();
     dispatch(setNew({
-      tsi:data.tsi, 
+      tsi:formatCurrency((parseInt(tsiComp.bangunan.replace(/ /g, '').replace(/Rp/g, '').replace(/\./g, ''))+parseInt(tsiComp.content.replace(/ /g, '').replace(/Rp/g, '').replace(/\./g, ''))).toString()),
       polis:data.polis, 
       alamatObj:data.alamatObj, 
       periode:periode, 
@@ -179,7 +215,10 @@ const NewApp2: React.FC = () => {
       status:"Approval",
       rate:ratePerluasan+rateDasar, 
       ktp,
-      agentName:username
+      agentName:username,
+      bangunan:tsiComp.bangunan,
+      content:tsiComp.content,
+      sr:data.sr
     }))
 
     navigate('/agent/application/')
@@ -279,8 +318,118 @@ const NewApp2: React.FC = () => {
                   })}
                 </select>
               </div>
+              <div className="relative my-5">
+              <label htmlFor="sr" className="left-3 -top-2.5">
+                Surrounding Risk:
+              </label>
+                <table className="w-full mt-4">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th className='text-base font-normal'>Okupasi</th>
+                      <th className='text-base font-normal'>Jarak</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Kiri:</td>
+                      <td>
+                      <input
+                          type="text"
+                          id="okupasisrKiri"
+                          name="okupasisrKiri"
+                          value={data.sr[0].okupasisr}
+                          onChange={handleInputChange}
+                          className="w-full rounded-xl pl-3 h-10 font-Poppins font-semibold"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          id="jarakKiri"
+                          name="jarakKiri"
+                          value={data.sr[0].jarak}
+                          onChange={handleInputChange}
+                          className="w-full rounded-xl pl-3 h-10 font-Poppins font-semibold"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Kanan:</td>
+                      <td>
+                      <input
+                          type="text"
+                          id="okupasisrKanan"
+                          name="okupasisrKanan"
+                          value={data.sr[1].okupasisr}
+                          onChange={handleInputChange}
+                          className="w-full rounded-xl pl-3 h-10 font-Poppins font-semibold"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          id="jarakKanan"
+                          name="jarakKanan"
+                          value={data.sr[1].jarak}
+                          onChange={handleInputChange}
+                          className="w-full rounded-xl pl-3 h-10 font-Poppins font-semibold"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Depan:</td>
+                      <td>
+                      <input
+                          type="text"
+                          id="okupasisrDepan"
+                          name="okupasisrDepan"
+                          value={data.sr[2].okupasisr}
+                          onChange={handleInputChange}
+                          className="w-full rounded-xl pl-3 h-10 font-Poppins font-semibold"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          id="jarakDepan"
+                          name="jarakDepan"
+                          value={data.sr[2].jarak}
+                          onChange={handleInputChange}
+                          className="w-full rounded-xl pl-3 h-10 font-Poppins font-semibold"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Belakang:</td>
+                      <td>
+                      <input
+                          type="text"
+                          id="okupasisrBelakang"
+                          name="okupasisrBelakang"
+                          value={data.sr[3].okupasisr}
+                          onChange={handleInputChange}
+                          className="w-full rounded-xl pl-3 h-10 font-Poppins font-semibold"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          id="jarakBelakang"
+                          name="jarakBelakang"
+                          value={data.sr[3].jarak}
+                          onChange={handleInputChange}
+                          className="w-full rounded-xl pl-3 h-10 font-Poppins font-semibold"
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+
               <div className={`relative my-5`}>
-                <label className="block mb-2">Perluasan</label>
+                <label className="block mb-2">Perluasan:</label>
                 <div className="flex items-center">
                 <input
                   type="checkbox"
@@ -327,40 +476,32 @@ const NewApp2: React.FC = () => {
                 </div>
               </div>
               <div className={`relative my-5`}>
-                <label className="block mb-2">Kelas Konstruksi:</label>
-                <div className="flex items-center">
-                  <input
-                    type="radio"
-                    name="kelas"
-                    value="1"
-                    checked={data.kelas === '1'}
-                    onChange={handleInputChange}
-                    className="mr-2"
-                  />
-                  <span>Kelas 1</span>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    type="radio"
-                    name="kelas"
-                    value="2"
-                    checked={data.kelas === '2'}
-                    onChange={handleInputChange}
-                    className="mr-2"
-                  />
-                  <span>Kelas 2</span>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    type="radio"
-                    name="kelas"
-                    value="3"
-                    checked={data.kelas === '3'}
-                    onChange={handleInputChange}
-                    className="mr-2"
-                  />
-                  <span>Kelas 3</span>
-                </div>
+                <label htmlFor="bangunan" className={`absolute left-3 -top-2.5 transition-all duration-200`}>
+                  Total Nilai Bangunan:
+                </label>
+                <input
+                  id="bangunan"
+                  name="bangunan"
+                  placeholder=""
+                  value={formatCurrency(tsiComp.bangunan)}
+                  onChange={handleInputChange}
+                  className="rounded-xl pl-3 w-full h-10 mt-5 p-3 font-Poppins font-semibold"
+                  type="text"
+                />
+              </div>
+              <div className={`relative my-5`}>
+                <label htmlFor="content" className={`absolute left-3 -top-2.5 transition-all duration-200`}>
+                  Total Nilai Content:
+                </label>
+                <input
+                  id="content"
+                  name="content"
+                  placeholder=""
+                  value={formatCurrency(tsiComp.content)}
+                  onChange={handleInputChange}
+                  className="rounded-xl pl-3 w-full h-10 mt-5 p-3 font-Poppins font-semibold"
+                  type="text"
+                />
               </div>
               <div className={`relative my-5`}>
                 <label htmlFor="tsi" className={`absolute left-3 -top-2.5 transition-all duration-200`}>
@@ -370,13 +511,14 @@ const NewApp2: React.FC = () => {
                   id="tsi"
                   name="tsi"
                   placeholder=""
-                  value={formatCurrency(data.tsi)}
+                  readOnly
+                  value={formatCurrency((parseInt(tsiComp.bangunan.replace(/ /g, '').replace(/Rp/g, '').replace(/\./g, ''))+parseInt(tsiComp.content.replace(/ /g, '').replace(/Rp/g, '').replace(/\./g, ''))).toString())}
                   onChange={handleInputChange}
                   className="rounded-xl pl-3 w-full h-10 mt-5 p-3 font-Poppins font-semibold"
                   type="text"
                 />
               </div>
-              <div className={`relative my-5`}>
+              {/* <div className={`relative my-5`}>
                 <label htmlFor="diskon" className={`absolute left-3 -top-2.5 transition-all duration-200`}>
                   Diskon:
                 </label>
@@ -390,7 +532,7 @@ const NewApp2: React.FC = () => {
                   max={15}
                   type="number"
                 />
-              </div>
+              </div> */}
               <div className='relative my-5 rounded-xl border-solid border-2 border-gray-300 flex justify-center p-3 flex-col gap-3 shadow-lg'>
               <canvas className='rounded-xl' ref={canvasRef}></canvas>
               <div className='flex justify-center items-center w-full'>

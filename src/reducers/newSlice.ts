@@ -41,6 +41,9 @@ interface State {
   ktp:any
   agentName:any;
   potentialPremi:any
+  bangunan:any
+  content:any;
+  sr:any
 }
 
 const initialState: State ={
@@ -73,7 +76,10 @@ const initialState: State ={
   rate:0,
   ktp:'',
   agentName:'',
-  potentialPremi:0
+  potentialPremi:0,
+  bangunan:'',
+  content:'',
+  sr:''
 };
 
 export const newSlice = createSlice({
@@ -113,7 +119,10 @@ export const newSlice = createSlice({
       state.rate= action.payload.rate;
       state.ktp= action.payload.ktp;
       state.agentName= action.payload.agentName;
-      state.potentialPremi=(Math.ceil((parseInt(state.tsi)*parseFloat(state.rate))-((parseInt(state.tsi)*parseFloat(state.rate))*(parseFloat(state.diskon)/100))))
+      state.sr= action.payload.sr;
+      state.bangunan= action.payload.bangunan.replace(/ /g,'').replace(/Rp/g,'').replace(/\./g,'');
+      state.content= action.payload.content.replace(/ /g,'').replace(/Rp/g,'').replace(/\./g,'');
+      state.potentialPremi=(Math.ceil((parseInt(state.tsi)*parseFloat(state.rate))))
 
       // const {addedDate,
       //   type,
@@ -146,7 +155,8 @@ export const newSlice = createSlice({
       //   potentialPremi} = state
 
 
-      fetch('https://agentserver-production.up.railway.app/new', {
+      // fetch('https://agentserver-production.up.railway.app/new', {
+      fetch('http://localhost:3001/new', {
         method:"POST", 
         headers: {
           'Content-Type': 'application/json',

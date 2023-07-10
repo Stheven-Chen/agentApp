@@ -4,9 +4,9 @@ import Tab from '../component/tab';
 import MainBox from '../component/mainBox';
 import FabComponent from '../component/fab';
 import { useSelector } from 'react-redux';
-import { NewState } from '../reducers/newSlice';
-import { KlaimState } from '../reducers/klaimSlice';
-import {EndorsState} from '../reducers/endorsSlice';
+// import { NewState } from '../reducers/newSlice';
+// import { KlaimState } from '../reducers/klaimSlice';
+// import {EndorsState} from '../reducers/endorsSlice';
 import {RootState} from '../reducers/userSlice';
 import formatCurrency from '../component/function/formatcurrency';
 // import Blob from '../component/blob';
@@ -41,7 +41,9 @@ interface New {
   rate:any;
   ktp?:any;
   agentName?:any;
-  potentialPremi:any
+  potentialPremi:any;
+  bangunan:any;
+  content:any
 }
 
 interface Klaim{
@@ -60,9 +62,9 @@ interface Klaim{
 }
 
 const Application: React.FC = () => {
-  const newApp = useSelector((state: NewState) => state.newApp);
-  const klaim = useSelector((state: KlaimState) => state.klaim);
-  const endors = useSelector((state: EndorsState) => state.endors);
+  // const newApp = useSelector((state: NewState) => state.newApp);
+  // const klaim = useSelector((state: KlaimState) => state.klaim);
+  // const endors = useSelector((state: EndorsState) => state.endors);
   const {username} = useSelector((state: RootState) => state.username);
   const [showModal, setShowModal] = useState<number>(-1);
   const [showModalK, setShowModalK] = useState<number>(-1);
@@ -86,9 +88,6 @@ const Application: React.FC = () => {
   //   fetchData();
   // }, [username]);
 
-  console.log(newApp)
-  console.log(klaim)
-  console.log(endors)
 
   // const arr: New[] = [];
   // const arrK: Klaim[] = [];
@@ -193,6 +192,7 @@ const Application: React.FC = () => {
         content={
           <>
             <span className="text-xl font-semibold">Application List</span>
+            
             {newData.length > 0 ||klaimData.length > 0 ? (
 
               <>
@@ -252,6 +252,8 @@ const Application: React.FC = () => {
                         <span>&nbsp;</span>
                         <span className='w-full text-start text-base'>{`Okupasi: ${data.okupasi}`}</span>
                         <span className='w-full text-start text-base'>{`Rate: ${`${parseFloat(data.rate)*1000}‰`}`}</span>
+                        <span className='w-full text-start text-base'>{`Bangunan: ${formatCurrency(data.bangunan.toString())}`}</span>
+                        <span className='w-full text-start text-base'>{`Content: ${formatCurrency(data.content.toString())}`}</span>
                         <span className='w-full text-start text-base'>{`TSI: ${formatCurrency(data.tsi.toString())}`}</span>
                         <span className='w-full text-start text-base'>{`Pertanggungan: ${data.polis}`}</span>
                         <span className='w-full text-start text-base'>{`Periode: ${data.periode}`}</span>
@@ -308,7 +310,7 @@ const Application: React.FC = () => {
                 )
               })} 
 
-              {endors.nPolis && (
+              {/* {endors.nPolis && (
                 <div className="w-full flex flex-col lg:w-9/12 justify-center bg-white shadow-md rounded-lg p-3 my-3 h-1/5">
                   <div className="grid grid-cols-2">
                     <span>{endors.addedDate}</span>
@@ -319,7 +321,7 @@ const Application: React.FC = () => {
                   </div>
                 </div>
 
-              )}
+              )} */}
 
               
               </>
