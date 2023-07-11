@@ -74,6 +74,7 @@ function FabComponent() {
         <Alert
           onClick={()=>navigate(`/agent/application/${where}harta`)}
           onCancel={()=>navigate(`/agent/application/${where}mv`)}
+          handleClose={()=>setShowAlert(false)}
         />
 
       )}

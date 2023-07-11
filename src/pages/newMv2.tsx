@@ -27,7 +27,7 @@ const NewAppMv2: React.FC = () => {
     rangka: '',
     plat: '',
     komisi: '',
-    diskon: '',
+    diskon: 0,
     startD: '',
     endD: '',
     perluasan: [],
@@ -204,7 +204,7 @@ const NewAppMv2: React.FC = () => {
     e.preventDefault();
     dispatch(
       setNew({
-        tsi: data.tsi,
+        tsi: parseInt(data.tsi.replace(/ /g, '').replace(/Rp/g, '').replace(/\./g, '')),
         polis: data.polis,
         periode: periode,
         okupasi: data.okupasi,
@@ -399,7 +399,7 @@ const NewAppMv2: React.FC = () => {
               </div>
               <div className={`relative my-5`}>
                 <label htmlFor="okupasi" className={`absolute left-3 -top-2.5 transition-all duration-200`}>
-                  Okupasi:
+                  Penggunaan:
                 </label>
                 <select
                   id="okupasi"
@@ -408,7 +408,7 @@ const NewAppMv2: React.FC = () => {
                   onChange={handleInputChange}
                   className="rounded-xl pl-3 w-full h-10 mt-5 font-Poppins font-semibold"
                 >
-                  <option value="">Pilih okupasi</option>
+                  <option value="">Pilih Penggunaan</option>
                   <option value="Pribadi">Pribadi</option>
                   <option value="Niaga">Niaga</option>
                   <option value="Dinas">Dinas</option>
@@ -467,6 +467,28 @@ const NewAppMv2: React.FC = () => {
                 <input
                   type="checkbox"
                   name="perluasan"
+                  value='pa'
+                  checked={selectedOptions.includes('pa')}
+                  onChange={handleCheckboxChange}
+                  className="mr-2"
+                />
+                  <span>PA</span>
+                </div>
+                <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="perluasan"
+                  value='tjh'
+                  checked={selectedOptions.includes('tjh')}
+                  onChange={handleCheckboxChange}
+                  className="mr-2"
+                />
+                  <span>TJH</span>
+                </div>
+                <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="perluasan"
                   value='ts'
                   checked={selectedOptions.includes('ts')}
                   onChange={handleCheckboxChange}
@@ -475,7 +497,7 @@ const NewAppMv2: React.FC = () => {
                   <span>TS</span>
                 </div>
               </div>
-              <div className={`relative my-5`}>
+              {/* <div className={`relative my-5`}>
                 <label htmlFor="diskon" className={`absolute left-3 -top-2.5 transition-all duration-200`}>
                   Diskon:
                 </label>
@@ -489,7 +511,7 @@ const NewAppMv2: React.FC = () => {
                   max={25}
                   type="number"
                 />
-              </div>
+              </div> */}
               <div className='relative my-5 rounded-xl border-solid border-2 border-gray-300 flex justify-center p-3 flex-col gap-3 shadow-lg'>
               <canvas className='rounded-xl' ref={canvasRef}></canvas>
               <div className='flex justify-center items-center w-full'>

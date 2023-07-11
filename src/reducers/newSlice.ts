@@ -108,7 +108,7 @@ export const newSlice = createSlice({
       state.plat= action.payload.plat;
       state.okupasi= action.payload.okupasi;
       state.perluasan= action.payload.perluasan;
-      state.tsi= action.payload.tsi.replace(/ /g, '').replace(/Rp/g, '').replace(/\./g, '');
+      state.tsi= action.payload.tsi;
       state.periode= action.payload.periode;
       state.kelas= action.payload.kelas;
       state.alamatObj= action.payload.alamatObj;
@@ -120,8 +120,8 @@ export const newSlice = createSlice({
       state.ktp= action.payload.ktp;
       state.agentName= action.payload.agentName;
       state.sr= action.payload.sr;
-      state.bangunan= action.payload.bangunan.replace(/ /g,'').replace(/Rp/g,'').replace(/\./g,'');
-      state.content= action.payload.content.replace(/ /g,'').replace(/Rp/g,'').replace(/\./g,'');
+      state.bangunan= action.payload.bangunan;
+      state.content= action.payload.content;
       state.potentialPremi=(Math.ceil((parseInt(state.tsi)*parseFloat(state.rate))))
 
       // const {addedDate,
@@ -155,8 +155,8 @@ export const newSlice = createSlice({
       //   potentialPremi} = state
 
 
-      // fetch('https://agentserver-production.up.railway.app/new', {
-      fetch('http://localhost:3001/new', {
+      fetch('https://agentserver-production.up.railway.app/new', {
+      // fetch('http://localhost:3001/new', {
         method:"POST", 
         headers: {
           'Content-Type': 'application/json',
