@@ -39,6 +39,7 @@ const NewApp2: React.FC = () => {
     kota:'',
     kecamatan:'',
     kelurahan:'',
+    EqZone:0
   });
   
   const [tsiComp, setTsiComp] = useState<any>({
@@ -131,9 +132,21 @@ const NewApp2: React.FC = () => {
     }
   };
   
+  const rateBenda = async (type:string, zone:string, rumah:string|undefined) =>{
+    const options = {
+      method:"POST"
+    }
+    try{
+      const res = await fetch(`https://agentserver-production.up.railway.app/ratebenda?type=${type}&zone=${zone}&rumah=${rumah}`, options)
+      const data = await res.json()
+      return data[0].rate 
+    }catch(err){
+      throw err
+    }
+  }
   
 
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCheckboxChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     const isChecked = event.target.checked;
   
@@ -151,11 +164,33 @@ const NewApp2: React.FC = () => {
       if (value === 'others') {
         setRatePerluasan((prevRatePerluasan)=>prevRatePerluasan + 0.000005);
       }
+
+      if(value === 'eqvet'){
+        let rumah = "";
+        if(data.okupasi === 'Rumah Tinggal / 2976'){
+          rumah = "true"
+        }else{
+          rumah = "false"
+        }
+        const rate = await rateBenda("eq",data.EqZone,rumah)
+        setRatePerluasan((prevRatePerluasan)=>prevRatePerluasan + rate);
+      }
+      
     } else {
       setSelectedOptions(selectedOptions.filter((option) => option !== value));
-  
+      
       if (value === 'rsmdcc') {
         setRatePerluasan((prevRatePerluasan)=>prevRatePerluasan - 0.0005);
+      }
+      if(value === 'eqvet'){
+        let rumah = "";
+        if(data.okupasi === 'Rumah Tinggal / 2976'){
+          rumah = "true"
+        }else{
+          rumah = "false"
+        }
+        const rate = await rateBenda("eq",data.EqZone,rumah)
+        setRatePerluasan((prevRatePerluasan)=>prevRatePerluasan - rate);
       }
   
       if (value === 'tsfwd') {
@@ -232,6 +267,7 @@ const NewApp2: React.FC = () => {
         query = data.kecamatan
         const result = await postal(undefined,undefined,query);
         setListKelurahan(result);
+        getZone()
       }
       if(data.kelurahan){
         query = data.kelurahan
@@ -243,7 +279,20 @@ const NewApp2: React.FC = () => {
 
   }, [data.prov, data.kota, data.kecamatan, data.kelurahan]);
   
-
+  const getZone = async () =>{
+    const options = {method:"POST"}
+    try{
+      const res = await fetch(`https://agentserver-production.up.railway.app/eq?zona=${data.kota}`, options);
+      const zonaData = await res.json();
+      setData((prevData:any)=>({
+        ...prevData,
+        EqZone:zonaData[0].zona
+      }))
+    }catch(err){
+      console.error(err)
+    }
+  }
+  
   
 
   const submit = (e:React.FormEvent<HTMLFormElement>) =>{
@@ -356,7 +405,7 @@ const NewApp2: React.FC = () => {
                   className="rounded-xl pl-3 w-full h-10 mt-5 font-Poppins font-semibold"
                 >
                   <option value="">Pilih Kota</option>
-                  {listKota.map((item:{city_id:string, kota:string}, index:number) => {
+                  {listKota.map((item:{city_id:string, kota:string, zona:number}, index:number) => {
                     return <option key={index} value={item.city_id}>{item.kota}</option>;
                   })}
                 </select>
