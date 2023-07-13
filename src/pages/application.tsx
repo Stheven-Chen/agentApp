@@ -128,6 +128,8 @@ const Application: React.FC = () => {
     fetchData()
   },[username])
 
+  console.log(newData)
+
 
   const modal = (index: number) => {
     setShowModal(index);

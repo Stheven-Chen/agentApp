@@ -43,7 +43,9 @@ interface State {
   potentialPremi:any
   bangunan:any
   content:any;
-  sr:any
+  sr:any;
+  tjh:number;
+  pa:number;
 }
 
 const initialState: State ={
@@ -79,7 +81,9 @@ const initialState: State ={
   potentialPremi:0,
   bangunan:'',
   content:'',
-  sr:''
+  sr:'',
+  tjh:0,
+  pa:0
 };
 
 export const newSlice = createSlice({
@@ -120,11 +124,13 @@ export const newSlice = createSlice({
       state.ktp= action.payload.ktp;
       state.agentName= action.payload.agentName;
       state.sr= action.payload.sr;
+      state.tjh= action.payload.tjh;
+      state.pa= action.payload.pa;
       state.bangunan= action.payload.bangunan;
       state.content= action.payload.content;
-      state.potentialPremi=(Math.ceil((parseInt(state.tsi)*parseFloat(state.rate))))
+      state.potentialPremi=(Math.ceil((parseInt(state.tsi)*parseFloat(state.rate))+state.tjh+state.pa))
 
-      // const {addedDate,
+      // const {addedDate,  
       //   type,
       //   insuredName,
       //   COB,

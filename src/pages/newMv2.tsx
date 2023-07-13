@@ -32,6 +32,8 @@ const NewAppMv2: React.FC = () => {
     endD: '',
     perluasan: [],
     wil: 0,
+    tjh:'',
+    pa:''
   });
   const { username } = useSelector((state: RootState) => state.username);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
@@ -48,6 +50,8 @@ const NewAppMv2: React.FC = () => {
   const [rateDasar, setRateDasar] = useState(0);
   const [ratePerluasan, setRatePerluasan] = useState(0);
   const { insuredName, NIK, address, phone, email, COB } = state;
+  const [premiTJH, setPremiTJH] = useState(0)
+  const [premiPA, setPremiPA] = useState(0)
 
   const getRate = async (tsi: number, wil: number, polis: string) => {
     if (data.tsi && data.wil && data.polis) {
@@ -65,10 +69,42 @@ const NewAppMv2: React.FC = () => {
     }
   };
 
-  const getPerluasan = async (wil: number, polis: string, cover: string) => {
+  const handleNilaiJaminanChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if(name==='tjh'){
+
+      setData((prevState: any) => ({ ...prevState, tjh: value }));
+      getPerluasan(undefined, undefined, "tjh")
+    }
+    if(name==='pa'){
+      
+      setData((prevState: any) => ({ ...prevState, pa: value }));
+      getPerluasan(undefined, undefined, "pa")
+    }
+  };
+  
+
+  const getPerluasan = async (wil: number|undefined, polis: string|undefined, cover: string|undefined) => {
     let perluasanRate = 0;
     
     try {
+      if(cover === 'tjh'){
+        const nilai = parseInt(data.tjh.replace(/ /g, '').replace(/Rp/g, '').replace(/\./g, ''))
+        const res = await fetch(`https://agentserver-production.up.railway.app/ratemv?min=${nilai}&max=${nilai}&cover=${cover}`, {
+          method: 'POST',
+        });
+        const rateTJH = await res.json()
+        setPremiTJH((rateTJH[0].rate)*nilai)
+        console.log(`Premi TJH ${nilai} * ${rateTJH[0].rate} = ${premiTJH}`)
+      }
+
+      if(cover ==='pa'){
+        const nilai = parseInt(data.pa.replace(/ /g, '').replace(/Rp/g, '').replace(/\./g, ''))
+        setPremiPA(nilai * (0.5/100))
+        console.log(`Premi PA ${nilai} * ${0.5/100} = ${premiPA}`)
+      }
+
+      if(wil && polis && cover){
       const res = await fetch(`https://agentserver-production.up.railway.app/ratemv?wil=${wil}&type=${polis}&cover=${cover}`, {
         method: 'POST',
       });
@@ -78,6 +114,7 @@ const NewAppMv2: React.FC = () => {
         perluasanRate = perluasanData[0].rate;
       } else {
         throw new Error('Failed to fetch perluasan data');
+      }
       }
     } catch (e) {
       console.error(e);
@@ -152,6 +189,21 @@ const NewAppMv2: React.FC = () => {
     }
   };
   
+  const handleTJHPA = async (event: React.ChangeEvent<HTMLInputElement>) =>{
+    const value = event.target.value;
+    const isChecked = event.target.checked;
+    if(isChecked){
+      setSelectedOptions([...selectedOptions, value]);
+      if (value === 'tjh' || value === 'pa') {
+        handleNilaiJaminanChange(event); // Panggil fungsi handleNilaiJaminanChange
+      }
+    }else{
+      setSelectedOptions(selectedOptions.filter((option) => option !== value));
+      if (value === 'tjh' || value === 'pa') {
+        handleNilaiJaminanChange(event); // Panggil fungsi handleNilaiJaminanChange
+      }
+    }
+  }
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -228,7 +280,9 @@ const NewAppMv2: React.FC = () => {
         insuredName,
         status: 'Approval',
         agentName: username,
-        rate:rateDasar+ratePerluasan
+        rate:rateDasar+ratePerluasan,
+        tjh:premiTJH,
+        pa:premiPA
       })
     );
       console.log(`
@@ -464,26 +518,46 @@ const NewAppMv2: React.FC = () => {
                   <span>EQVET</span>
                 </div>
                 <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  name="perluasan"
-                  value='pa'
-                  checked={selectedOptions.includes('pa')}
-                  onChange={handleCheckboxChange}
-                  className="mr-2"
-                />
-                  <span>PA</span>
+                  <input
+                    type="checkbox"
+                    name="perluasan"
+                    value="tjh"
+                    checked={selectedOptions.includes('tjh')}
+                    onChange={handleTJHPA}
+                    className="mr-2"
+                  />
+                  <span>TJH</span>
+                  {selectedOptions.includes('tjh') && (
+                    <input
+                      type="text"
+                      name="tjh"
+                      value={formatCurrency(data.tjh)}
+                      onChange={handleNilaiJaminanChange}
+                      className='rounded-xl ml-2 px-3 font-Poppins'
+                      placeholder="Input nilai jaminan"
+                    />
+                  )}
                 </div>
                 <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  name="perluasan"
-                  value='tjh'
-                  checked={selectedOptions.includes('tjh')}
-                  onChange={handleCheckboxChange}
-                  className="mr-2"
-                />
-                  <span>TJH</span>
+                  <input
+                    type="checkbox"
+                    name="perluasan"
+                    value="pa"
+                    checked={selectedOptions.includes('pa')}
+                    onChange={handleTJHPA}
+                    className="mr-2"
+                  />
+                  <span>PA</span>
+                  {selectedOptions.includes('pa') && (
+                    <input
+                      type="text"
+                      name="pa"
+                      value={formatCurrency(data.pa)}
+                      onChange={handleNilaiJaminanChange}
+                      className='rounded-xl ml-2 px-3 font-Poppins'
+                      placeholder="Input nilai jaminan"
+                    />
+                  )}
                 </div>
                 <div className="flex items-center">
                 <input

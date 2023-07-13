@@ -1,6 +1,12 @@
 import React from 'react';
 import formatCurrency from './function/formatcurrency'
 
+interface Surround{
+  arah:string;
+  jarak:string;
+  okupasisr:string;
+}
+
 interface New {
     addedDate: any;
     type: any;
@@ -33,7 +39,8 @@ interface New {
     agentName?:any;
     potentialPremi:any;
     bangunan:any;
-    content:any
+    content:any;
+    sr:any;
   }
 
 interface listNew{
@@ -84,9 +91,8 @@ const List: React.FC<listNew> = ({newData,  modal, showModal, setShowModal}) =>{
                             <span className='w-full text-start text-base'>{`No Mesin: ${data.mesin}`}</span>
                             <span className='w-full text-start text-base'>{`No rangka: ${data.rangka}`}</span>
                             <span className='w-full text-start text-base'>{`Perluasan: ${data.perluasan.map((item:string) => item).join(" || ").toUpperCase()}`}</span>
-                            <span className='w-full text-start text-base'>{`Diskon: ${data.diskon}%`}</span>
                             <span className='w-full text-start text-base'>{`Potential Premi: ${formatCurrency(data.potentialPremi.toString())}`}</span>
-                            <img src={data.sign} alt="sign" className='' />
+                            <img src={data.sign} alt="sign" className='border-solid border-gray-400 border-2 shadow-md rounded-xl mt-5' />
                           <button className='text-sky-600 text-lg font-medium transition-transform transform-gpu duration-300 active:scale-90' onClick={()=>setShowModal(-1)}>Close</button>
                           </div>
                         </div>):(
@@ -107,12 +113,28 @@ const List: React.FC<listNew> = ({newData,  modal, showModal, setShowModal}) =>{
                         <span className='w-full text-start text-base'>{`TSI: ${formatCurrency(data.tsi.toString())}`}</span>
                         <span className='w-full text-start text-base'>{`Pertanggungan: ${data.polis}`}</span>
                         <span className='w-full text-start text-base'>{`Periode: ${data.periode}`}</span>
-                        <span className='w-full text-start text-base'>{`Kelas: ${data.kelas}`}</span>
+                        <span className='w-full text-start text-base'>{`Surrounding Risk:`}</span>
+                        <table className='w-full text-start text-base'>
+                          <tr className='text-start'>
+                            <th>Arah</th>
+                            <th>Okupasi</th>
+                            <th>Jarak</th>
+                          </tr>
+                        {data.sr.map((surr:Surround, index:number)=>{
+                          return(
+                            <tr className='text-sm' key={index}>
+                              <td>{surr.arah}</td>
+                              <td>{surr.okupasisr}</td>
+                              <td>{`${surr.jarak}m`}</td>
+                            </tr>
+                          )
+                        })}
+                        </table>
+                         
                         <span className='w-full text-start text-base'>{`Perluasan: ${data.perluasan.map((item:string) => item).join(" || ").toUpperCase()}`}</span>
-                        <span className='w-full text-start text-base'>{`Diskon: ${data.diskon}%`}</span>
                         <span className='w-full text-start text-base'>{`Potential Premi: ${formatCurrency(data.potentialPremi.toString())}`}</span>
                         {/* <div className='w-full text-start text-base' onClick={()=>downloadFile()}>{`KTP: ${data?.ktp[0].name}`}</div> */}
-                        <img src={data.sign} alt="sign" className='' />
+                        <img src={data.sign} alt="sign" className='border-solid border-gray-400 border-2 shadow-md rounded-xl mt-5'  />
                       <button className='text-sky-600 text-lg pt-3 font-medium transition-transform transform-gpu duration-300 active:scale-90' onClick={() => setShowModal(-1)}>Close</button>
                       </div>
                     </div>
